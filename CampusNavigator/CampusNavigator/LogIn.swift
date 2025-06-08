@@ -1,15 +1,7 @@
-//
-//  SignUp.swift
-//  CampusNavigator
-//
-//  Created by proushoth koushal on 6/7/25.
-//
-
 import SwiftUI
 
-struct SignUp: View {
+struct LoginView: View {
     @State private var email = ""
-    @State private var username  = ""
     @State private var password = ""
     @State private var isPasswordVisible = false
     @State private var showAlert = false
@@ -22,14 +14,9 @@ struct SignUp: View {
                 .fontWeight(.bold)
             
             VStack(spacing: 20) {
+                // Email Field
                 TextField("Email", text: $email)
                     .keyboardType(.emailAddress)
-                    .autocapitalization(.none)
-                    .padding()
-                    .background(Color(.secondarySystemBackground))
-                    .cornerRadius(12)
-                // Email Field
-                TextField("Username", text: $username)
                     .autocapitalization(.none)
                     .padding()
                     .background(Color(.secondarySystemBackground))
@@ -54,6 +41,15 @@ struct SignUp: View {
                 .background(Color(.secondarySystemBackground))
                 .cornerRadius(12)
                 
+                // Forgot Password
+                HStack {
+                    Spacer()
+                    Button("Forgot Password?") {
+                        // Handle forgot password action
+                    }
+                    .font(.footnote)
+                    .foregroundColor(.blue)
+                }
             }
             
             // Login Button
@@ -64,7 +60,7 @@ struct SignUp: View {
                     // Handle login logic here
                 }
             }) {
-                Text("Sign up")
+                Text("Log In")
                     .frame(maxWidth: .infinity)
                     .padding()
                     .background(Color.blue)
@@ -77,9 +73,9 @@ struct SignUp: View {
             
             // Sign Up Prompt
             HStack {
-                Text("Already have an account?")
+                Text("Don't have an account?")
                     .foregroundColor(.gray)
-                Button("Log in") {
+                Button("Sign Up") {
                     // Navigate to sign up screen
                 }
                 .foregroundColor(.blue)
@@ -90,7 +86,8 @@ struct SignUp: View {
     }
 }
 
-
-#Preview {
-    SignUp()
+struct LoginView_Previews: PreviewProvider {
+    static var previews: some View {
+        LoginView()
+    }
 }
