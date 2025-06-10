@@ -8,38 +8,36 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var selectedTab = 0
 
     var body: some View {
-        
-        TabView{
+        TabView(selection: $selectedTab) {
+            
             Image(systemName: "globe")
                 .imageScale(.large)
-                .foregroundStyle(.tint)
                 .tabItem {
                     Image(systemName: "house")
                     Text("Home")
-                
-                
                 }
+                .tag(0)
             
             Text("Search")
-                .tabItem{
+                .tabItem {
                     Image(systemName: "magnifyingglass")
                     Text("Search")
-                
                 }
+                .tag(1)
             
-            Text("Home")
-                .tabItem{
+            Text("Settings")
+                .tabItem {
                     Image(systemName: "gear")
-                    Text("Search")
-                  
+                    Text("Settings")
                 }
-            
-                .tint(.red) 
+                .tag(2)
         }
+        .accentColor(.red) // Changes the selected tab color
     }
-    }
+}
 
 #Preview {
     ContentView()
