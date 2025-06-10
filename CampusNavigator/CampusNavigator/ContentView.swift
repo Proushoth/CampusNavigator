@@ -28,6 +28,13 @@ struct ContentView: View {
                 }
                 .tag(1)
             
+            Text("Calendar")
+                .tabItem {
+                    Image(systemName: "calendar")
+                    Text("Calendar")
+                }
+                .tag(2)
+            
             Text("Settings")
                 .tabItem {
                     Image(systemName: "gear")
