@@ -1,10 +1,3 @@
-//
-//  ContentView.swift
-//  CampusNavigator
-//
-//  Created by proushoth koushal on 6/7/25.
-//
-
 import SwiftUI
 
 struct ContentView: View {
@@ -13,8 +6,7 @@ struct ContentView: View {
     var body: some View {
         TabView(selection: $selectedTab) {
             
-            Image(systemName: "globe")
-                .imageScale(.large)
+            Color.clear
                 .tabItem {
                     Image(systemName: "house")
                     Text("Home")
@@ -40,7 +32,7 @@ struct ContentView: View {
                     Image(systemName: "gear")
                     Text("Settings")
                 }
-                .tag(2)
+                .tag(3)
         }
         .accentColor(.red) // Changes the selected tab color
     }
