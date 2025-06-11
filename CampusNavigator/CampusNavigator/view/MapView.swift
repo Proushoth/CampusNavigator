@@ -64,36 +64,52 @@ struct CampusMapView: View {
     @State private var selectedStart: CampusNode?
     @State private var selectedEnd: CampusNode?
     @State private var path: [CampusNode] = []
+    @State private var startText: String = ""
+    @State private var destinationText: String = ""
     
     let mapWidth: CGFloat = 410
     let mapHeight: CGFloat = 450
     
     var body: some View {
-        ZStack {
-            Image("CampusMap")
-                .resizable()
-                .frame(width: mapWidth, height: mapHeight)
-                .offset(y:95)
-            
-            ForEach(graph.nodes) { node in
-                Circle()
-                    .fill(selectedStart == node ? Color.green :
-                            selectedEnd == node ? Color.blue : Color.red)
-                    .frame(width: 20, height: 20)
-                    .position(x: node.x, y: node.y)
-                    .onTapGesture {
-                        handleSelection(of: node)
-                    }
+        VStack(spacing: 0) {
+            HStack {
+                TextField("Start", text: $startText)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding(.horizontal, 5)
+                
+                TextField("Destination", text: $destinationText)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding(.horizontal, 5)
             }
+            .padding(.horizontal)
+            .padding(.bottom, 0)
             
-            if path.count > 1 {
-                Path { pathObj in
-                    pathObj.move(to: CGPoint(x: path[0].x, y: path[0].y))
-                    for node in path.dropFirst() {
-                        pathObj.addLine(to: CGPoint(x: node.x, y: node.y))
-                    }
+            ZStack {
+                Image("CampusMap")
+                    .resizable()
+                    .frame(width: mapWidth, height: mapHeight)
+                    .offset(y:95)
+                
+                ForEach(graph.nodes) { node in
+                    Circle()
+                        .fill(selectedStart == node ? Color.green :
+                                selectedEnd == node ? Color.blue : Color.red)
+                        .frame(width: 20, height: 20)
+                        .position(x: node.x, y: node.y)
+                        .onTapGesture {
+                            handleSelection(of: node)
+                        }
                 }
-                .stroke(Color.yellow, lineWidth: 4)
+                
+                if path.count > 1 {
+                    Path { pathObj in
+                        pathObj.move(to: CGPoint(x: path[0].x, y: path[0].y))
+                        for node in path.dropFirst() {
+                            pathObj.addLine(to: CGPoint(x: node.x, y: node.y))
+                        }
+                    }
+                    .stroke(Color.yellow, lineWidth: 4)
+                }
             }
         }
         .onAppear {
@@ -104,14 +120,18 @@ struct CampusMapView: View {
     private func handleSelection(of node: CampusNode) {
         if selectedStart == nil {
             selectedStart = node
+            startText = node.name
         } else if selectedEnd == nil && node != selectedStart {
             selectedEnd = node
+            destinationText = node.name
             if let start = selectedStart, let end = selectedEnd {
                 path = graph.shortestPath(from: start, to: end)
             }
         } else {
             selectedStart = nil
             selectedEnd = nil
+            startText = ""
+            destinationText = ""
             path = []
         }
     }
@@ -137,7 +157,6 @@ struct CampusMapView: View {
         graph.addEdge(from: nodeF, to: nodeA)
     }
 }
-
 
 struct CampusMapView_Previews: PreviewProvider {
     static var previews: some View {
