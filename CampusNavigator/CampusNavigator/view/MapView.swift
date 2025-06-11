@@ -64,27 +64,28 @@ struct CampusMapView: View {
     @State private var selectedStart: CampusNode?
     @State private var selectedEnd: CampusNode?
     @State private var path: [CampusNode] = []
-
-    let mapWidth: CGFloat = 350
-    let mapHeight: CGFloat = 500
-
+    
+    let mapWidth: CGFloat = 410
+    let mapHeight: CGFloat = 450
+    
     var body: some View {
         ZStack {
             Image("CampusMap")
                 .resizable()
                 .frame(width: mapWidth, height: mapHeight)
-
+                .offset(y:95)
+            
             ForEach(graph.nodes) { node in
                 Circle()
                     .fill(selectedStart == node ? Color.green :
-                          selectedEnd == node ? Color.blue : Color.red)
+                            selectedEnd == node ? Color.blue : Color.red)
                     .frame(width: 20, height: 20)
                     .position(x: node.x, y: node.y)
                     .onTapGesture {
                         handleSelection(of: node)
                     }
             }
-
+            
             if path.count > 1 {
                 Path { pathObj in
                     pathObj.move(to: CGPoint(x: path[0].x, y: path[0].y))
@@ -99,7 +100,7 @@ struct CampusMapView: View {
             setupMockData()
         }
     }
-
+    
     private func handleSelection(of node: CampusNode) {
         if selectedStart == nil {
             selectedStart = node
@@ -114,19 +115,26 @@ struct CampusMapView: View {
             path = []
         }
     }
-
+    
     private func setupMockData() {
-        let nodeA = CampusNode(name: "Library", x: 100, y: 150)
-        let nodeB = CampusNode(name: "Lecture Hall 1", x: 250, y: 100)
-        let nodeC = CampusNode(name: "Study Hall", x: 300, y: 300)
-        let nodeD = CampusNode(name: "Auditorium", x: 150, y: 400)
-
-        graph.nodes = [nodeA, nodeB, nodeC, nodeD]
+        let nodeA = CampusNode(name: "Library", x: 110, y: 395)
+        let nodeB = CampusNode(name: "Lecture Hall", x: 260, y: 400)
+        let nodeC = CampusNode(name: "Study Hall", x: 115, y: 525)
+        let nodeD = CampusNode(name: "Auditorium", x: 320, y: 505)
+        let nodeE = CampusNode(name: "Admin Office", x: 350, y: 375)
+        let nodeF = CampusNode(name: "Student Center", x: 180, y: 310)
+        
+        graph.nodes = [nodeA, nodeB, nodeC, nodeD, nodeE, nodeF]
+        
         graph.addEdge(from: nodeA, to: nodeB)
         graph.addEdge(from: nodeB, to: nodeC)
         graph.addEdge(from: nodeC, to: nodeD)
         graph.addEdge(from: nodeA, to: nodeD)
         graph.addEdge(from: nodeB, to: nodeD)
+        graph.addEdge(from: nodeD, to: nodeE)
+        graph.addEdge(from: nodeB, to: nodeE)
+        graph.addEdge(from: nodeE, to: nodeF)
+        graph.addEdge(from: nodeF, to: nodeA)
     }
 }
 
