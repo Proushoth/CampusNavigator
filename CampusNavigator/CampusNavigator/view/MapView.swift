@@ -71,24 +71,12 @@ struct CampusMapView: View {
     let mapHeight: CGFloat = 450
     
     var body: some View {
-        VStack(spacing: 0) {
-            HStack {
-                TextField("Start", text: $startText)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding(.horizontal, 5)
-                
-                TextField("Destination", text: $destinationText)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding(.horizontal, 5)
-            }
-            .padding(.horizontal)
-            .padding(.bottom, 0)
-            
+        ZStack(alignment: .top) {
             ZStack {
                 Image("CampusMap")
                     .resizable()
                     .frame(width: mapWidth, height: mapHeight)
-                    .offset(y:95)
+                    .offset(y: 95)
                 
                 ForEach(graph.nodes) { node in
                     Circle()
@@ -111,6 +99,17 @@ struct CampusMapView: View {
                     .stroke(Color.yellow, lineWidth: 4)
                 }
             }
+            .offset(y: 40)
+            
+            VStack(spacing: 12) {
+                TextField("Start Location", text: $startText)
+                    .textFieldStyle(EnhancedTextFieldStyle())
+                
+                TextField("Destination", text: $destinationText)
+                    .textFieldStyle(EnhancedTextFieldStyle())
+            }
+            .padding(.horizontal, 20)
+            .padding(.top, 10)
         }
         .onAppear {
             setupMockData()
@@ -155,6 +154,21 @@ struct CampusMapView: View {
         graph.addEdge(from: nodeB, to: nodeE)
         graph.addEdge(from: nodeE, to: nodeF)
         graph.addEdge(from: nodeF, to: nodeA)
+    }
+}
+
+struct EnhancedTextFieldStyle: TextFieldStyle {
+    func _body(configuration: TextField<Self._Label>) -> some View {
+        configuration
+            .padding(12)
+            .background(Color.white)
+            .cornerRadius(8)
+            .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
+            .overlay(
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+            )
+            .font(.system(size: 16, weight: .medium))
     }
 }
 
