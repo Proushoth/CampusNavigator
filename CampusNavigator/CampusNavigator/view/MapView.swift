@@ -121,8 +121,8 @@ struct CampusMapView: View {
         let nodeB = CampusNode(name: "Lecture Hall", x: 260, y: 400)
         let nodeC = CampusNode(name: "Study Hall", x: 115, y: 525)
         let nodeD = CampusNode(name: "Auditorium", x: 320, y: 505)
-        let nodeE = CampusNode(name: "Admin Office", x: 350, y: 375)
-        let nodeF = CampusNode(name: "Student Center", x: 180, y: 310)
+        let nodeE = CampusNode(name: "Admin Office", x: 260, y: 558)
+        let nodeF = CampusNode(name: "Student Center", x: 115, y: 660)
         
         graph.nodes = [nodeA, nodeB, nodeC, nodeD, nodeE, nodeF]
         
