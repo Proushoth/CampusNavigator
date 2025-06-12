@@ -18,11 +18,14 @@ struct Halls: View {
 
             // Search Bar
             SearchBar()
+            
+            SegmentPickerView()
 
             
             Spacer()
         }
         .padding(.top)
+        ContentView()
     }
 }
 
@@ -48,3 +51,25 @@ struct SearchBar: View {
         .padding(.horizontal)
     }
 }
+
+struct SegmentPickerView: View {
+    @State private var selectedSegment = 0
+    let segments = ["All", "Lecture", "Offices", "Events"]
+
+    var body: some View {
+        VStack {
+            Picker("Select Hall Region", selection: $selectedSegment) {
+                ForEach(0..<segments.count, id: \.self) { index in
+                    Text(segments[index])
+                }
+            }
+            .pickerStyle(SegmentedPickerStyle())
+            .padding()
+
+            // Display selected segment
+            Text("Selected: \(segments[selectedSegment])")
+                .padding()
+        }
+    }
+}
+
