@@ -21,18 +21,8 @@ struct CalendarToDoView: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 16) {
-                HStack {
-                    Text("Campus")
-                        .font(.system(size: 25, weight: .bold))
-                        .foregroundColor(.red)
-
-                    Text("Navigator")
-                        .font(.system(size: 25, weight: .bold))
-                        .foregroundColor(.black)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal)
-                .padding(.top, 30)
+                
+             HomeNavBar()
 
 
                 DatePicker("Select Date", selection: $selectedDate, displayedComponents: [.date])
