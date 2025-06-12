@@ -8,53 +8,71 @@
 import SwiftUI
 
 struct Dashboard: View {
+    @State private var selectedAction: QuickAction? = nil
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            // Top Navbar
-            HomeNavBar()
+        NavigationStack {
+            VStack(alignment: .leading, spacing: 20) {
+                HomeNavBar()
 
-            // Greeting
-            VStack(alignment: .leading, spacing: 4) {
-                Text("Hello, Proushoth!")
-                    .font(.caption)
-                    .fontWeight(.medium)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Hello, Proushoth!")
+                        .font(.caption)
+                        .fontWeight(.medium)
+                }
+                .padding(.horizontal)
+
+                NextClassCard()
+
+                QuickActionsView(selectedAction: $selectedAction)
+
+                CampusHighlightsView()
+
+                Spacer()
             }
-            .padding(.horizontal)
-
-            // Next Class Card
-            NextClassCard()
-
-            // Quick Actions
-            QuickActionsView()
-            
-            //Campus Highlight
-            CampusHighlightsView()
-
-            Spacer()
+            .padding(.top)
+            // Navigation destination based on enum value
+            .navigationDestination(for: QuickAction.self) { action in
+                switch action {
+                case .schedule:
+                    CalendarToDoView()
+                case .findBuilding:
+                    CampusMapView()
+                case .help:
+                    ProfileSetupView()
+                }
+            }
         }
-        .padding(.top)
     }
 }
 
+enum QuickAction: Hashable {
+    case schedule
+    case findBuilding
+    case help
+}
+
+
 struct HomeNavBar: View {
     var body: some View {
-        HStack {
+       
             HStack {
-                Text("Campus")
-                    .font(.system(size: 25, weight: .bold))
-                    .foregroundColor(.red)
-                Text("Navigator")
-                    .font(.system(size: 25, weight: .bold))
-                    .foregroundColor(.black)
-            }
-
-Spacer()
-
-            Image(uiImage: #imageLiteral(resourceName: "notifications"))
-                .onTapGesture {
-                    // Notification tap action
+                HStack {
+                    Text("Campus")
+                        .font(.system(size: 25, weight: .bold))
+                        .foregroundColor(.red)
+                    Text("Navigator")
+                        .font(.system(size: 25, weight: .bold))
+                        .foregroundColor(.black)
                 }
-        }
+                
+                Spacer()
+                Image(uiImage: #imageLiteral(resourceName: "notifications"))
+                    .onTapGesture {
+                    Notification()
+                }
+            }
+        
         .padding(.horizontal)
     }
 }
@@ -101,6 +119,8 @@ struct NextClassCard: View {
 }
 
 struct QuickActionsView: View {
+    @Binding var selectedAction: QuickAction?
+
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Quick Actions")
@@ -109,15 +129,27 @@ struct QuickActionsView: View {
                 .padding(.horizontal)
 
             HStack(spacing: 40) {
-                ActionItem2(icon: "calendar", label: "Schedule")
-                ActionItem2(icon: "mappin.and.ellipse", label: "Find Building")
-                ActionItem2(icon: "magnifyingglass", label: "Ask for Help")
+                NavigationLink(value: QuickAction.schedule) {
+                    ActionItem(icon: "calendar", label: "Schedule")
+                }
+
+                NavigationLink(value: QuickAction.findBuilding) {
+                    ActionItem(icon: "mappin.and.ellipse", label: "Find Building")
+                }
+
+                NavigationLink(value: QuickAction.help) {
+                    ActionItem(icon: "magnifyingglass", label: "Ask for Help")
+                }
             }
             .frame(maxWidth: .infinity)
             .padding(.horizontal)
         }
     }
 }
+
+    
+
+
 
 struct ActionItem: View {
     let icon: String

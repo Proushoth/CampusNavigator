@@ -93,17 +93,183 @@ struct Halls: View {
                     
                     else if selectedSegment == "Lecture"{
                         
-                        Text("Hello lec")
+                        ScrollView{
+                            InfoCardView1(
+                                icon: "house.fill",
+                                iconBackground: .green,
+                                title: "Library Quiet Zones",
+                                subtitle: "Moderate occupancy · Level 2 available"
+                            )
+                            InfoCardView(
+                                icon: "house.fill",
+                                iconBackground: .green,
+                                title: "Library Quiet Zones",
+                                subtitle: "Moderate occupancy · Level 2 available"
+                            )
+                            InfoCardView(
+                                icon: "house.fill",
+                                iconBackground: .green,
+                                title: "Library Quiet Zones",
+                                subtitle: "Moderate occupancy · Level 2 available"
+                            )
+                            InfoCardView(
+                                icon: "house.fill",
+                                iconBackground: .green,
+                                title: "Library Quiet Zones",
+                                subtitle: "Moderate occupancy · Level 2 available"
+                            )
+                            
+                            InfoCardView(
+                                icon: "house.fill",
+                                iconBackground: .green,
+                                title: "Library Quiet Zones",
+                                subtitle: "Moderate occupancy · Level 2 available"
+                            )
+                            
+                            InfoCardView(
+                                icon: "house.fill",
+                                iconBackground: .green,
+                                title: "Library Quiet Zones",
+                                subtitle: "Moderate occupancy · Level 2 available"
+                            )
+                            
+                            InfoCardView(
+                                icon: "house.fill",
+                                iconBackground: .green,
+                                title: "Library Quiet Zones",
+                                subtitle: "Moderate occupancy · Level 2 available"
+                            )
+                            
+                            InfoCardView(
+                                icon: "house.fill",
+                                iconBackground: .green,
+                                title: "Library Quiet Zones",
+                                subtitle: "Moderate occupancy · Level 2 available"
+                            )
+                            
+                        }
                     }
                     
                     else if selectedSegment == "Offices"{
                         
-                        Text("Hello Office")
+                        ScrollView
+                            
+                            {
+                                InfoCardView1(
+                                    icon: "house.fill",
+                                    iconBackground: .green,
+                                    title: "Library Quiet Zones",
+                                    subtitle: "Moderate occupancy · Level 2 available"
+                                )
+                                InfoCardView(
+                                    icon: "house.fill",
+                                    iconBackground: .green,
+                                    title: "Library Quiet Zones",
+                                    subtitle: "Moderate occupancy · Level 2 available"
+                                )
+                                InfoCardView(
+                                    icon: "house.fill",
+                                    iconBackground: .green,
+                                    title: "Library Quiet Zones",
+                                    subtitle: "Moderate occupancy · Level 2 available"
+                                )
+                                InfoCardView(
+                                    icon: "house.fill",
+                                    iconBackground: .green,
+                                    title: "Library Quiet Zones",
+                                    subtitle: "Moderate occupancy · Level 2 available"
+                                )
+                                
+                                InfoCardView(
+                                    icon: "house.fill",
+                                    iconBackground: .green,
+                                    title: "Library Quiet Zones",
+                                    subtitle: "Moderate occupancy · Level 2 available"
+                                )
+                                
+                                InfoCardView(
+                                    icon: "house.fill",
+                                    iconBackground: .green,
+                                    title: "Library Quiet Zones",
+                                    subtitle: "Moderate occupancy · Level 2 available"
+                                )
+                                
+                                InfoCardView(
+                                    icon: "house.fill",
+                                    iconBackground: .green,
+                                    title: "Library Quiet Zones",
+                                    subtitle: "Moderate occupancy · Level 2 available"
+                                )
+                                
+                                InfoCardView(
+                                    icon: "house.fill",
+                                    iconBackground: .green,
+                                    title: "Library Quiet Zones",
+                                    subtitle: "Moderate occupancy · Level 2 available"
+                                )
+                                
+                            
+                            
+                        }
                     }
                     
                     else if selectedSegment == "Events"{
                         
-                        Text("Hello Events")
+                        ScrollView{
+                            InfoCardView1(
+                                icon: "house.fill",
+                                iconBackground: .green,
+                                title: "Library Quiet Zones",
+                                subtitle: "Moderate occupancy · Level 2 available"
+                            )
+                            InfoCardView(
+                                icon: "house.fill",
+                                iconBackground: .green,
+                                title: "Library Quiet Zones",
+                                subtitle: "Moderate occupancy · Level 2 available"
+                            )
+                            InfoCardView(
+                                icon: "house.fill",
+                                iconBackground: .green,
+                                title: "Library Quiet Zones",
+                                subtitle: "Moderate occupancy · Level 2 available"
+                            )
+                            InfoCardView(
+                                icon: "house.fill",
+                                iconBackground: .green,
+                                title: "Library Quiet Zones",
+                                subtitle: "Moderate occupancy · Level 2 available"
+                            )
+                            
+                            InfoCardView(
+                                icon: "house.fill",
+                                iconBackground: .green,
+                                title: "Library Quiet Zones",
+                                subtitle: "Moderate occupancy · Level 2 available"
+                            )
+                            
+                            InfoCardView(
+                                icon: "house.fill",
+                                iconBackground: .green,
+                                title: "Library Quiet Zones",
+                                subtitle: "Moderate occupancy · Level 2 available"
+                            )
+                            
+                            InfoCardView(
+                                icon: "house.fill",
+                                iconBackground: .green,
+                                title: "Library Quiet Zones",
+                                subtitle: "Moderate occupancy · Level 2 available"
+                            )
+                            
+                            InfoCardView(
+                                icon: "house.fill",
+                                iconBackground: .green,
+                                title: "Library Quiet Zones",
+                                subtitle: "Moderate occupancy · Level 2 available"
+                            )
+                            
+                        }
                     }
                     
                 }
