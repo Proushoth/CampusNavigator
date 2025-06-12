@@ -12,23 +12,28 @@ struct Dashboard: View {
         VStack(alignment: .leading, spacing: 20) {
             // Top Navbar
             HomeNavBar()
-            
+
             // Greeting
             VStack(alignment: .leading, spacing: 4) {
                 Text("Hello, Proushoth")
                     .font(.caption)
                     .fontWeight(.medium)
-                    
-            
             }
             .padding(.horizontal)
 
             // Next Class Card
             NextClassCard()
+
+            // Quick Actions
+            QuickActionsView()
             
+            //Campus Highlight
+            CampusHighlightsView()
+
             Spacer()
         }
         .padding(.top)
+        ContentView()
     }
 }
 
@@ -87,12 +92,82 @@ struct NextClassCard: View {
         }
         .padding()
         .background(
-            LinearGradient(gradient: Gradient(colors: [Color.blue, Color.blue.opacity(0.9)]),
+            LinearGradient(gradient: Gradient(colors: [Color.red, Color.red.opacity(0.9)]),
                            startPoint: .leading,
                            endPoint: .trailing)
         )
         .cornerRadius(20)
         .padding(.horizontal)
+    }
+}
+
+struct QuickActionsView: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Quick Actions")
+                .font(.headline)
+                .foregroundColor(.brown)
+                .padding(.horizontal)
+
+            HStack(spacing: 40) {
+                ActionItem2(icon: "calendar", label: "Schedule")
+                ActionItem2(icon: "mappin.and.ellipse", label: "Find Building")
+                ActionItem2(icon: "magnifyingglass", label: "Ask for Help")
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.horizontal)
+        }
+    }
+}
+
+struct ActionItem: View {
+    let icon: String
+    let label: String
+
+    var body: some View {
+        VStack(spacing: 8) {
+            Image(systemName: icon)
+                .font(.title2)
+                .foregroundColor(.blue)
+            Text(label)
+                .font(.subheadline)
+                .foregroundColor(.brown)
+        }
+    }
+}
+
+struct CampusHighlightsView: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Campus Highlights")
+                .font(.headline)
+                .foregroundColor(.brown)
+                .padding(.horizontal)
+
+            VStack(spacing: 16) {
+                InfoCardView(
+                    icon: "house.fill",
+                    iconBackground: .green,
+                    title: "Library Quiet Zones",
+                    subtitle: "Moderate occupancy · Level 2 available"
+                )
+
+                InfoCardView(
+                    icon: "person.2.fill",
+                    iconBackground: .orange,
+                    title: "Student Cafeteria",
+                    subtitle: "Busy · Wait time ~15 min"
+                )
+
+                InfoCardView(
+                    icon: "calendar",
+                    iconBackground: .purple,
+                    title: "Freshers Mixer",
+                    subtitle: "Tonight at 5 PM · Student Center"
+                )
+            }
+            .padding(.horizontal)
+        }
     }
 }
 
