@@ -1,159 +1,144 @@
 import SwiftUI
 
-struct CampusNode: Identifiable, Hashable {
-    let id: UUID = UUID()
+struct Building: Identifiable, Equatable {
+    let id = UUID()
     let name: String
     let x: CGFloat
     let y: CGFloat
-}
-
-struct CampusEdge {
-    let from: CampusNode
-    let to: CampusNode
-    let distance: Double
-}
-
-class CampusGraph: ObservableObject {
-    @Published var nodes: [CampusNode] = []
-    @Published var edges: [CampusEdge] = []
-    
-    let scale: Double = 0.15
-    
-    func addEdge(from: CampusNode, to: CampusNode) {
-        let dx = Double(from.x - to.x)
-        let dy = Double(from.y - to.y)
-        let pixelDistance = sqrt(dx * dx + dy * dy)
-        let realDistance = pixelDistance * scale
-        edges.append(CampusEdge(from: from, to: to, distance: realDistance))
-    }
-    
-    func neighbors(of node: CampusNode) -> [CampusEdge] {
-        edges.filter { $0.from == node }
-    }
-
-    func shortestPath(from start: CampusNode, to goal: CampusNode) -> [CampusNode] {
-        var distances: [CampusNode: Double] = [start: 0]
-        var previous: [CampusNode: CampusNode] = [:]
-        var unvisited = Set(nodes)
-
-        while let current = unvisited.min(by: { (distances[$0] ?? Double.infinity) < (distances[$1] ?? Double.infinity) }) {
-            if current == goal { break }
-            unvisited.remove(current)
-
-            for edge in neighbors(of: current) {
-                let alt = (distances[current] ?? Double.infinity) + edge.distance
-                if alt < (distances[edge.to] ?? Double.infinity) {
-                    distances[edge.to] = alt
-                    previous[edge.to] = current
-                }
-            }
-        }
-
-        var path: [CampusNode] = []
-        var current: CampusNode? = goal
-        while current != nil {
-            path.insert(current!, at: 0)
-            current = previous[current!]
-        }
-        return path
-    }
+    let width: CGFloat
+    let height: CGFloat
 }
 
 struct CampusMapView: View {
-    @StateObject private var graph = CampusGraph()
-    @State private var selectedStart: CampusNode?
-    @State private var selectedEnd: CampusNode?
-    @State private var path: [CampusNode] = []
+    @State private var startBuilding: Building?
+    @State private var endBuilding: Building?
     @State private var startText: String = ""
     @State private var destinationText: String = ""
-    
-    let mapWidth: CGFloat = 410
-    let mapHeight: CGFloat = 450
-    
+    @State private var distanceText: String = ""
+
+    // Static list of buildings and distances
+    private let buildings: [Building] = [
+        Building(name: "Library", x: 110, y: 76, width: 60, height: 60),
+        Building(name: "Lecture Hall", x: 260, y: 56, width: 60, height: 60),
+        Building(name: "Study Hall", x: 115, y: 64, width: 60, height: 60),
+        Building(name: "Auditorium", x: 320, y: 54, width: 60, height: 60),
+        Building(name: "Admin Office", x: 40, y: 34, width: 60, height: 60),
+        Building(name: "Student Center", x: 50, y: 43, width: 60, height: 60)
+    ]
+
+    // Static distances between buildings
+    private let distances: [String: Double] = [
+        "Library-Lecture Hall": 120,
+        "Lecture Hall-Study Hall": 140,
+        "Study Hall-Auditorium": 110,
+        "Library-Auditorium": 170,
+        "Lecture Hall-Auditorium": 80,
+        "Auditorium-Admin Office": 60,
+        "Lecture Hall-Admin Office": 90,
+        "Admin Office-Student Center": 150,
+        "Student Center-Library": 180
+    ]
+
     var body: some View {
-        ZStack(alignment: .top) {
-            ZStack {
-                Image("CampusMap")
-                    .resizable()
-                    .frame(width: mapWidth, height: mapHeight)
-                    .offset(y: 95)
-                
-                ForEach(graph.nodes) { node in
-                    Circle()
-                        .fill(selectedStart == node ? Color.green :
-                                selectedEnd == node ? Color.blue : Color.red)
-                        .frame(width: 20, height: 20)
-                        .position(x: node.x, y: node.y)
-                        .onTapGesture {
-                            handleSelection(of: node)
-                        }
+        VStack(spacing: 0) {
+            // Header
+            HStack {
+                HStack {
+                    Text("Campus")
+                        .font(.system(size: 25, weight: .bold))
+                        .foregroundColor(.red)
+                    Text("Navigator")
+                        .font(.system(size: 25, weight: .bold))
+                        .foregroundColor(.black)
                 }
-                
-                if path.count > 1 {
-                    Path { pathObj in
-                        pathObj.move(to: CGPoint(x: path[0].x, y: path[0].y))
-                        for node in path.dropFirst() {
-                            pathObj.addLine(to: CGPoint(x: node.x, y: node.y))
-                        }
+                Spacer()
+                Image(uiImage: #imageLiteral(resourceName: "notifications"))
+                    .onTapGesture {
+                        // Notification tap
                     }
-                    .stroke(Color.yellow, lineWidth: 4)
-                }
             }
-            .offset(y: 40)
-            
+            .padding(.horizontal)
+            .padding(.top, 12)
+
+            // Input fields
             VStack(spacing: 12) {
                 TextField("Start Location", text: $startText)
                     .textFieldStyle(EnhancedTextFieldStyle())
-                
+                    .disabled(true)
+
                 TextField("Destination", text: $destinationText)
                     .textFieldStyle(EnhancedTextFieldStyle())
+                    .disabled(true)
+
+                if !distanceText.isEmpty {
+                    Text("Distance: \(distanceText) meters")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                }
             }
             .padding(.horizontal, 20)
             .padding(.top, 10)
-        }
-        .onAppear {
-            setupMockData()
+
+            // Map View
+            ScrollView([.horizontal, .vertical]) {
+                ZStack {
+                    Image("CampusMap")
+                        .resizable()
+                        .frame(width: 800, height: 800)
+
+                    ForEach(buildings) { building in
+                        Rectangle()
+                            .fill(Color.blue.opacity(0.3))
+                            .frame(width: building.width, height: building.height)
+                            .position(x: building.x, y: building.y)
+                            .onTapGesture {
+                                handleTap(on: building)
+                            }
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 5)
+                                    .stroke((building == startBuilding || building == endBuilding) ? Color.yellow : Color.clear, lineWidth: 2)
+                            )
+                    }
+                }
+                .frame(width: 800, height: 800)
+            }
+            .frame(height: 450)
+            .padding(.top, 30)
+
+            // Bottom dock
+            ContentView()
         }
     }
-    
-    private func handleSelection(of node: CampusNode) {
-        if selectedStart == nil {
-            selectedStart = node
-            startText = node.name
-        } else if selectedEnd == nil && node != selectedStart {
-            selectedEnd = node
-            destinationText = node.name
-            if let start = selectedStart, let end = selectedEnd {
-                path = graph.shortestPath(from: start, to: end)
-            }
+
+    private func handleTap(on building: Building) {
+        if startBuilding == nil {
+            startBuilding = building
+            startText = building.name
+            endBuilding = nil
+            destinationText = ""
+            distanceText = ""
+        } else if endBuilding == nil && building != startBuilding {
+            endBuilding = building
+            destinationText = building.name
+            distanceText = computeDistance(from: startBuilding!, to: endBuilding!)
         } else {
-            selectedStart = nil
-            selectedEnd = nil
+            // Reset if tapped again
+            startBuilding = nil
+            endBuilding = nil
             startText = ""
             destinationText = ""
-            path = []
+            distanceText = ""
         }
     }
-    
-    private func setupMockData() {
-        let nodeA = CampusNode(name: "Library", x: 110, y: 395)
-        let nodeB = CampusNode(name: "Lecture Hall", x: 260, y: 400)
-        let nodeC = CampusNode(name: "Study Hall", x: 115, y: 525)
-        let nodeD = CampusNode(name: "Auditorium", x: 320, y: 505)
-        let nodeE = CampusNode(name: "Admin Office", x: 260, y: 558)
-        let nodeF = CampusNode(name: "Student Center", x: 115, y: 660)
-        
-        graph.nodes = [nodeA, nodeB, nodeC, nodeD, nodeE, nodeF]
-        
-        graph.addEdge(from: nodeA, to: nodeB)
-        graph.addEdge(from: nodeB, to: nodeC)
-        graph.addEdge(from: nodeC, to: nodeD)
-        graph.addEdge(from: nodeA, to: nodeD)
-        graph.addEdge(from: nodeB, to: nodeD)
-        graph.addEdge(from: nodeD, to: nodeE)
-        graph.addEdge(from: nodeB, to: nodeE)
-        graph.addEdge(from: nodeE, to: nodeF)
-        graph.addEdge(from: nodeF, to: nodeA)
+
+    private func computeDistance(from: Building, to: Building) -> String {
+        let key1 = "\(from.name)-\(to.name)"
+        let key2 = "\(to.name)-\(from.name)"
+        if let distance = distances[key1] ?? distances[key2] {
+            return String(format: "%.2f", distance)
+        } else {
+            return "N/A"
+        }
     }
 }
 
@@ -172,8 +157,6 @@ struct EnhancedTextFieldStyle: TextFieldStyle {
     }
 }
 
-struct CampusMapView_Previews: PreviewProvider {
-    static var previews: some View {
-        CampusMapView()
-    }
+#Preview {
+    CampusMapView()
 }
