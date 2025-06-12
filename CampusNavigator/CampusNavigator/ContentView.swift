@@ -6,6 +6,7 @@ struct ContentView: View {
     var body: some View {
         TabView(selection: $selectedTab) {
             
+        
             Color.clear
                 .tabItem {
                     Image(systemName: "house")
@@ -13,28 +14,28 @@ struct ContentView: View {
                 }
                 .tag(0)
             
-            Text("Search")
+            Color.clear
                 .tabItem {
                     Image(systemName: "magnifyingglass")
                     Text("Search")
                 }
                 .tag(1)
             
-            Text("Calendar")
+            Color.clear
                 .tabItem {
                     Image(systemName: "calendar")
                     Text("Calendar")
                 }
                 .tag(2)
             
-            Text("Settings")
+            Color.clear
                 .tabItem {
                     Image(systemName: "gear")
                     Text("Settings")
                 }
                 .tag(3)
         }
-        .accentColor(.red) // Changes the selected tab color
+        .accentColor(.red)
     }
 }
 
