@@ -15,7 +15,7 @@ struct Dashboard: View {
 
             // Greeting
             VStack(alignment: .leading, spacing: 4) {
-                Text("Hello, Proushoth")
+                Text("Hello, Proushoth!")
                     .font(.caption)
                     .fontWeight(.medium)
             }
