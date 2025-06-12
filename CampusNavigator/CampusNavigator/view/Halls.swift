@@ -9,23 +9,143 @@ import SwiftUI
 
 struct Halls: View {
     
-   
+    @State private var selectedSegment = "All"
+    let segments = ["All", "Lecture", "Offices", "Events"]
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            // Top Navbar
-            HomeNavBar()
-
-            // Search Bar
-            SearchBar()
+        
+        ScrollView{
+            VStack(alignment: .leading, spacing: 20) {
+                // Top Navbar
+                HomeNavBar()
+                
+                // Search Bar
+                SearchBar()
+                
+                
+                VStack {
+                    
+                    Picker("View", selection: $selectedSegment) {
+                        ForEach(segments, id: \.self) { view in
+                            Text(view)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    .padding()
+                    
+                    if selectedSegment == "All"{
+                        ScrollView{
+                            InfoCardView1(
+                                icon: "house.fill",
+                                iconBackground: .green,
+                                title: "Library Quiet Zones",
+                                subtitle: "Moderate occupancy · Level 2 available"
+                            )
+                            InfoCardView(
+                                icon: "house.fill",
+                                iconBackground: .green,
+                                title: "Library Quiet Zones",
+                                subtitle: "Moderate occupancy · Level 2 available"
+                            )
+                            InfoCardView(
+                                icon: "house.fill",
+                                iconBackground: .green,
+                                title: "Library Quiet Zones",
+                                subtitle: "Moderate occupancy · Level 2 available"
+                            )
+                            InfoCardView(
+                                icon: "house.fill",
+                                iconBackground: .green,
+                                title: "Library Quiet Zones",
+                                subtitle: "Moderate occupancy · Level 2 available"
+                            )
+                            
+                            InfoCardView(
+                                icon: "house.fill",
+                                iconBackground: .green,
+                                title: "Library Quiet Zones",
+                                subtitle: "Moderate occupancy · Level 2 available"
+                            )
+                            
+                            InfoCardView(
+                                icon: "house.fill",
+                                iconBackground: .green,
+                                title: "Library Quiet Zones",
+                                subtitle: "Moderate occupancy · Level 2 available"
+                            )
+                            
+                            InfoCardView(
+                                icon: "house.fill",
+                                iconBackground: .green,
+                                title: "Library Quiet Zones",
+                                subtitle: "Moderate occupancy · Level 2 available"
+                            )
+                            
+                            InfoCardView(
+                                icon: "house.fill",
+                                iconBackground: .green,
+                                title: "Library Quiet Zones",
+                                subtitle: "Moderate occupancy · Level 2 available"
+                            )
+                            
+                        }
+                    }
+                    
+                    else if selectedSegment == "Lecture"{
+                        
+                        Text("Hello lec")
+                    }
+                    
+                    else if selectedSegment == "Offices"{
+                        
+                        Text("Hello Office")
+                    }
+                    
+                    else if selectedSegment == "Events"{
+                        
+                        Text("Hello Events")
+                    }
+                    
+                }
+            }
+        }
             
-            SegmentPickerView()
+        
+        .padding(.top)
+    }
+}
 
-            
+struct InfoCardView1: View {
+    var icon: String
+    var iconBackground: Color
+    var title: String
+    var subtitle: String
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 16) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(iconBackground)
+                    .frame(width: 40, height: 40)
+                Image(systemName: icon)
+                    .foregroundColor(.white)
+            }
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(.headline)
+                    .foregroundColor(.brown)
+                Text(subtitle)
+                    .font(.subheadline)
+                    .foregroundColor(.gray)
+            }
+
             Spacer()
         }
-        .padding(.top)
-        ContentView()
+        .padding()
+        .background(Color.white)
+        .cornerRadius(16)
+        .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
     }
 }
 
@@ -52,24 +172,58 @@ struct SearchBar: View {
     }
 }
 
-struct SegmentPickerView: View {
-    @State private var selectedSegment = 0
-    let segments = ["All", "Lecture", "Offices", "Events"]
-
+struct AllView: View {
     var body: some View {
-        VStack {
-            Picker("Select Hall Region", selection: $selectedSegment) {
-                ForEach(0..<segments.count, id: \.self) { index in
-                    Text(segments[index])
-                }
-            }
-            .pickerStyle(SegmentedPickerStyle())
-            .padding()
 
-            // Display selected segment
-            Text("Selected: \(segments[selectedSegment])")
-                .padding()
+      
+            VStack(spacing: 16) {
+                InfoCardView(
+                    icon: "house.fill",
+                    iconBackground: .green,
+                    title: "Library Quiet Zones",
+                    subtitle: "Moderate occupancy · Level 2 available"
+                )
+                
+                InfoCardView(
+                    icon: "person.2.fill",
+                    iconBackground: .orange,
+                    title: "Student Cafeteria",
+                    subtitle: "Busy · Wait time ~15 min"
+                )
+                
+                InfoCardView(
+                    icon: "calendar",
+                    iconBackground: .purple,
+                    title: "Freshers Mixer",
+                    subtitle: "Tonight at 5 PM · Student Center"
+                )
+                
+                InfoCardView(
+                    icon: "calendar",
+                    iconBackground: .purple,
+                    title: "Freshers Mixer",
+                    subtitle: "Tonight at 5 PM · Student Center"
+                )
+                
+                InfoCardView(
+                    icon: "calendar",
+                    iconBackground: .purple,
+                    title: "Freshers Mixer",
+                    subtitle: "Tonight at 5 PM · Student Center"
+                )
+                
+                InfoCardView(
+                    icon: "calendar",
+                    iconBackground: .purple,
+                    title: "Freshers Mixer",
+                    subtitle: "Tonight at 5 PM · Student Center"
+                )
+                
+                
+            }
+            .padding(.horizontal)
+        
         }
     }
-}
+
 

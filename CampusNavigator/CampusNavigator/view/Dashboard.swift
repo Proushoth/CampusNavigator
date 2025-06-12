@@ -33,7 +33,6 @@ struct Dashboard: View {
             Spacer()
         }
         .padding(.top)
-        ContentView()
     }
 }
 
@@ -49,7 +48,7 @@ struct HomeNavBar: View {
                     .foregroundColor(.black)
             }
 
-            Spacer()
+Spacer()
 
             Image(uiImage: #imageLiteral(resourceName: "notifications"))
                 .onTapGesture {

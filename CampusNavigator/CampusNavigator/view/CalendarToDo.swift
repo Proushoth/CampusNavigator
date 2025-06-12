@@ -62,7 +62,6 @@ struct CalendarToDoView: View {
                         .onDelete(perform: deleteTask)
                     }
                 }
-                ContentView()
                    
             }
         }
@@ -89,6 +88,5 @@ struct CalendarToDoView: View {
 struct CalendarToDoView_Previews: PreviewProvider {
     static var previews: some View {
         CalendarToDoView()
-        ContentView()
     }
 }

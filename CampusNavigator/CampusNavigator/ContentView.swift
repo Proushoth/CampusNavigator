@@ -8,28 +8,28 @@ struct ContentView: View {
         TabView(selection: $selectedTab) {
             
         
-            Color.clear
+            Dashboard()
                 .tabItem {
                     Image(systemName: "house")
                     Text("Home")
                 }
                 .tag(0)
             
-            Color.clear
+            Halls()
                 .tabItem {
                     Image(systemName: "magnifyingglass")
                     Text("Search")
                 }
                 .tag(1)
             
-            Color.clear
+            CalendarToDoView()
                 .tabItem {
                     Image(systemName: "calendar")
                     Text("Calendar")
                 }
                 .tag(2)
             
-            Color.clear
+            ProfileSetupView()
                 .tabItem {
                     Image(systemName: "gear")
                     Text("Settings")
