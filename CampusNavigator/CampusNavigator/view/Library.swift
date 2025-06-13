@@ -9,6 +9,7 @@ struct LibraryView: View {
                 .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
             
             
+            
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
                     ZStack(alignment: .bottom) {
