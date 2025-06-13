@@ -11,11 +11,12 @@ struct Notification: View {
     var body: some View {
         HomeNavBar()
         
+        Spacer()
         
+        Text("This is reserved for notification page")
         
-        
-        ContentView()
             .padding(.top)
+        Spacer()
     }
 }
    
