@@ -158,27 +158,10 @@ struct CampusMapView: View {
             VStack(spacing: 16) {
                 // Header
                 HStack {
-                    HStack(spacing: 0) {
-                        Text("Campus")
-                            .font(.system(size: 28, weight: .heavy))
-                            .foregroundColor(.red)
-                        Text("Navigator")
-                            .font(.system(size: 28, weight: .heavy))
-                            .foregroundColor(.black)
-                    }
+                HomeNavBar()
                     
                     Spacer()
-                    
-                    Button(action: {
-                        // Notification action
-                    }) {
-                        Image(systemName: "bell.fill")
-                            .font(.system(size: 20))
-                            .foregroundColor(.gray)
-                            .padding(8)
-                            .background(Color.gray.opacity(0.1))
-                            .clipShape(Circle())
-                    }
+    
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 10)
