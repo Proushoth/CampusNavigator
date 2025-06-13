@@ -55,24 +55,23 @@ enum QuickAction: Hashable {
 
 struct HomeNavBar: View {
     var body: some View {
-       
+        HStack {
             HStack {
-                HStack {
-                    Text("Campus")
-                        .font(.system(size: 25, weight: .bold))
-                        .foregroundColor(.red)
-                    Text("Navigator")
-                        .font(.system(size: 25, weight: .bold))
-                        .foregroundColor(.black)
-                }
-                
-                Spacer()
-                Image(uiImage: #imageLiteral(resourceName: "notifications"))
-                    .onTapGesture {
-                       
-                }
+                Text("Campus")
+                    .font(.system(size: 25, weight: .bold))
+                    .foregroundColor(.red)
+                Text("Navigator")
+                    .font(.system(size: 25, weight: .bold))
+                    .foregroundColor(.black)
             }
-        
+            
+            Spacer()
+            NavigationLink {
+                NotificationView()
+            } label: {
+                Image(uiImage: #imageLiteral(resourceName: "notifications"))
+            }
+        }
         .padding(.horizontal)
     }
 }
