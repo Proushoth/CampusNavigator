@@ -18,12 +18,12 @@ struct CampusMapView: View {
 
     // Static list of buildings and distances
     private let buildings: [Building] = [
-        Building(name: "Library", x: 110, y: 76, width: 60, height: 60),
-        Building(name: "Lecture Hall", x: 260, y: 56, width: 60, height: 60),
-        Building(name: "Study Hall", x: 115, y: 64, width: 60, height: 60),
-        Building(name: "Auditorium", x: 320, y: 54, width: 60, height: 60),
-        Building(name: "Admin Office", x: 40, y: 34, width: 60, height: 60),
-        Building(name: "Student Center", x: 50, y: 43, width: 60, height: 60)
+        Building(name: "Library", x: 220, y: 200, width: 60, height: 60),
+        Building(name: "Lecture Hall", x: 500, y: 230, width: 60, height: 60),
+        Building(name: "Study Hall", x: 150, y: 400, width: 60, height: 60),
+        Building(name: "Auditorium", x: 230, y: 700, width: 60, height: 60),
+        Building(name: "Admin Office", x: 440, y: 550, width: 60, height: 60),
+        Building(name: "Student Center", x: 700, y: 400, width: 60, height: 60)
     ]
 
     // Static distances between buildings
@@ -105,8 +105,7 @@ struct CampusMapView: View {
             .frame(height: 450)
             .padding(.top, 30)
 
-            // Bottom dock
-            ContentView()
+      
         }
     }
 
