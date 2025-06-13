@@ -15,7 +15,8 @@ struct CampusMapView: View {
     @State private var startText: String = ""
     @State private var destinationText: String = ""
     @State private var distanceText: String = ""
-
+    @State private var showNavigationView: Bool = false
+    
     // Static list of buildings
     private let buildings: [Building] = [
         Building(name: "Library", x: 220, y: 200, width: 60, height: 60),
@@ -53,67 +54,260 @@ struct CampusMapView: View {
         // Admin Office connections
         "Admin Office-Student Center": 150
     ]
+    
+    // Hardcoded directions for each route
+    private let directions: [String: [String]] = [
+        "Library-Lecture Hall": [
+            "Head northeast from Library main entrance",
+            "Walk straight for 50 meters along the main path",
+            "Turn right at the fountain",
+            "Continue for 70 meters to reach Lecture Hall"
+        ],
+        "Library-Study Hall": [
+            "Exit Library through west entrance",
+            "Walk straight for 90 meters",
+            "Study Hall will be on your left"
+        ],
+        "Library-Auditorium": [
+            "Head south from Library",
+            "Take the pedestrian bridge",
+            "After bridge, turn left",
+            "Walk 100 meters to reach Auditorium"
+        ],
+        "Library-Admin Office": [
+            "Exit Library through east entrance",
+            "Walk diagonally across the quad",
+            "Turn right after the statue",
+            "Admin Office is the second building on your left"
+        ],
+        "Library-Student Center": [
+            "Head northeast from Library",
+            "Follow the main path for 100 meters",
+            "Turn left at the intersection",
+            "Student Center is at the end of the path"
+        ],
+        "Lecture Hall-Study Hall": [
+            "Exit Lecture Hall through west entrance",
+            "Cross the courtyard",
+            "Follow the path around the garden",
+            "Study Hall is straight ahead"
+        ],
+        "Lecture Hall-Auditorium": [
+            "Head south from Lecture Hall",
+            "Take the stairs down to lower campus",
+            "Auditorium is directly ahead"
+        ],
+        "Lecture Hall-Admin Office": [
+            "Exit Lecture Hall through east entrance",
+            "Walk straight for 50 meters",
+            "Turn right at the crossroads",
+            "Admin Office is on your left"
+        ],
+        "Lecture Hall-Student Center": [
+            "Head west from Lecture Hall",
+            "Follow the path around the lake",
+            "Student Center is the large building at the end"
+        ],
+        "Study Hall-Auditorium": [
+            "Exit Study Hall through south entrance",
+            "Walk down the hill",
+            "Cross the small bridge",
+            "Auditorium is straight ahead"
+        ],
+        "Study Hall-Admin Office": [
+            "Head east from Study Hall",
+            "Walk through the academic quad",
+            "Admin Office is the third building on your right"
+        ],
+        "Study Hall-Student Center": [
+            "Exit Study Hall through north entrance",
+            "Walk uphill for 50 meters",
+            "Turn right at the top",
+            "Student Center is visible ahead"
+        ],
+        "Auditorium-Admin Office": [
+            "Exit Auditorium through north entrance",
+            "Walk straight for 60 meters",
+            "Admin Office is on your right"
+        ],
+        "Auditorium-Student Center": [
+            "Head northwest from Auditorium",
+            "Take the path through the gardens",
+            "Student Center is at the top of the hill"
+        ],
+        "Admin Office-Student Center": [
+            "Exit Admin Office through west entrance",
+            "Walk straight along the main path",
+            "Student Center is at the end of the path"
+        ]
+    ]
 
     var body: some View {
-        VStack(spacing: 0) {
-            // Header and input fields in a compact group
-            VStack(spacing: 16) {
-                // Header
-                HStack {
-                    HStack(spacing: 0) {
-                        Text("Campus")
-                            .font(.system(size: 28, weight: .heavy))
-                            .foregroundColor(.red)
-                        Text("Navigator")
-                            .font(.system(size: 28, weight: .heavy))
-                            .foregroundColor(.black)
-                    }
-                    
-                    Spacer()
-                    
-                    Button(action: {
-                        // Notification action
-                    }) {
-                        Image(systemName: "bell.fill")
-                            .font(.system(size: 20))
-                            .foregroundColor(.gray)
-                            .padding(8)
-                            .background(Color.gray.opacity(0.1))
-                            .clipShape(Circle())
-                    }
-                }
-                .padding(.horizontal, 20)
-                .padding(.top, 10)
-                .offset(y: -40)
-                
-                // Input fields
-                VStack(spacing: 12) {
-                    LocationInputField(icon: "location.fill", text: $startText, placeholder: "Start Location")
-                    
-                    LocationInputField(icon: "flag.fill", text: $destinationText, placeholder: "Destination")
-                    
-                    // Always show the distance view, but make it transparent when empty
-                    HStack {
-                        Image(systemName: "arrow.right.circle.fill")
-                            .foregroundColor(distanceText.isEmpty ? .clear : .blue)
-                        Text(distanceText.isEmpty ? " " : "Distance: \(distanceText) meters")
-                            .font(.subheadline)
-                            .fontWeight(.medium)
-                            .foregroundColor(distanceText.isEmpty ? .clear : .blue)
-                    }
-                    .padding(8)
-                    .background(distanceText.isEmpty ? Color.clear : Color.blue.opacity(0.1))
-                    .cornerRadius(8)
-                    .frame(height: 20) // Maintain consistent height
-                }
-                .padding(.horizontal, 20)
-                .offset(y: -20)
+        Group {
+            if showNavigationView {
+                NavigationView
+            } else {
+                MainView
             }
-            .padding(.bottom, 16)
+        }
+    }
+    
+    private var MainView: some View {
+        ZStack(alignment: .bottom) {
+            VStack(spacing: 0) {
+                // Header and input fields in a compact group
+                VStack(spacing: 16) {
+                    // Header
+                    HStack {
+                        HStack(spacing: 0) {
+                            Text("Campus")
+                                .font(.system(size: 28, weight: .heavy))
+                                .foregroundColor(.red)
+                            Text("Navigator")
+                                .font(.system(size: 28, weight: .heavy))
+                                .foregroundColor(.black)
+                        }
+                        
+                        Spacer()
+                        
+                        Button(action: {
+                            // Notification action
+                        }) {
+                            Image(systemName: "bell.fill")
+                                .font(.system(size: 20))
+                                .foregroundColor(.gray)
+                                .padding(8)
+                                .background(Color.gray.opacity(0.1))
+                                .clipShape(Circle())
+                        }
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.top, 10)
+                    .offset(y: -40)
+                    
+                    // Input fields
+                    VStack(spacing: 12) {
+                        LocationInputField(icon: "location.fill", text: $startText, placeholder: "Start Location")
+                        
+                        LocationInputField(icon: "flag.fill", text: $destinationText, placeholder: "Destination")
+                        
+                        // Distance and Directions button
+                        if !distanceText.isEmpty {
+                            HStack {
+                                Spacer()
+                                
+                                VStack(alignment: .trailing, spacing: 8) {
+                                    HStack {
+                                        Image(systemName: "arrow.right.circle.fill")
+                                            .foregroundColor(.blue)
+                                        Text("Distance: \(distanceText) meters")
+                                            .font(.subheadline)
+                                            .fontWeight(.medium)
+                                            .foregroundColor(.blue)
+                                    }
+                                    
+                                    Button(action: {
+                                        withAnimation {
+                                            showNavigationView = true
+                                        }
+                                    }) {
+                                        HStack {
+                                            Text("Navigate")
+                                            Image(systemName: "arrow.right")
+                                        }
+                                        .font(.subheadline)
+                                        .fontWeight(.medium)
+                                        .foregroundColor(.white)
+                                        .padding(.horizontal, 16)
+                                        .padding(.vertical, 8)
+                                        .background(Color.blue)
+                                        .cornerRadius(20)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    .padding(.horizontal, 20)
+                    .offset(y: -20)
+                }
+                .padding(.bottom, 16)
+                .background(Color(.systemBackground))
+                .zIndex(1)
+                
+                // Map View
+                ScrollView([.horizontal, .vertical]) {
+                    ZStack {
+                        Image("CampusMap")
+                            .resizable()
+                            .frame(width: 800, height: 800)
+                        
+                        ForEach(buildings) { building in
+                            let buildingColor = determineBuildingColor(building: building)
+                            
+                            RoundedRectangle(cornerRadius: 8)
+                                .fill(buildingColor.fill)
+                                .frame(width: building.width, height: building.height)
+                                .position(x: building.x, y: building.y)
+                                .onTapGesture {
+                                    handleTap(on: building)
+                                }
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(buildingColor.border, lineWidth: 3)
+                                )
+                                .overlay(
+                                    Text(building.name)
+                                        .font(.system(size: 10, weight: .bold))
+                                        .foregroundColor(.white)
+                                        .padding(4)
+                                        .background(Color.black.opacity(0.5))
+                                        .cornerRadius(4)
+                                        .offset(y: building.height/2 + 12)
+                                )
+                        }
+                    }
+                    .frame(width: 800, height: 800)
+                }
+                .frame(height: 450)
+            }
+            .edgesIgnoringSafeArea(.bottom)
+        }
+    }
+    
+    private var NavigationView: some View {
+        VStack(spacing: 0) {
+            // Header with back button
+            HStack {
+                Button(action: {
+                    withAnimation {
+                        showNavigationView = false
+                    }
+                }) {
+                    HStack {
+                        Image(systemName: "chevron.left")
+                        Text("Back")
+                    }
+                    .foregroundColor(.blue)
+                    .padding()
+                }
+                
+                Spacer()
+                
+                VStack(alignment: .trailing) {
+                    Text("Navigating")
+                        .font(.headline)
+                    Text("\(startBuilding?.name ?? "") → \(endBuilding?.name ?? "")")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                }
+                .padding(.trailing)
+                
+                Spacer()
+            }
+            .frame(height: 44)
             .background(Color(.systemBackground))
-            .zIndex(1)
             
-            // Map View
+            // Map View (full width)
             ScrollView([.horizontal, .vertical]) {
                 ZStack {
                     Image("CampusMap")
@@ -127,9 +321,6 @@ struct CampusMapView: View {
                             .fill(buildingColor.fill)
                             .frame(width: building.width, height: building.height)
                             .position(x: building.x, y: building.y)
-                            .onTapGesture {
-                                handleTap(on: building)
-                            }
                             .overlay(
                                 RoundedRectangle(cornerRadius: 8)
                                     .stroke(buildingColor.border, lineWidth: 3)
@@ -147,9 +338,20 @@ struct CampusMapView: View {
                 }
                 .frame(width: 800, height: 800)
             }
-            .frame(height: 450)
+            .frame(maxHeight: .infinity)
+            
+            // Directions Panel
+            DirectionsPanel(
+                start: startBuilding?.name ?? "",
+                destination: endBuilding?.name ?? "",
+                distance: distanceText,
+                directions: getDirections()
+            )
+            .frame(height: UIScreen.main.bounds.height * 0.4)
         }
+        .background(Color(.systemBackground))
         .edgesIgnoringSafeArea(.bottom)
+        .transition(.move(edge: .trailing))
     }
 
     private func determineBuildingColor(building: Building) -> (fill: Color, border: Color) {
@@ -192,6 +394,13 @@ struct CampusMapView: View {
             return "N/A"
         }
     }
+    
+    private func getDirections() -> [String] {
+        guard let start = startBuilding, let end = endBuilding else { return [] }
+        let key1 = "\(start.name)-\(end.name)"
+        let key2 = "\(end.name)-\(start.name)"
+        return directions[key1] ?? directions[key2] ?? ["No directions available for this route"]
+    }
 }
 
 struct LocationInputField: View {
@@ -215,6 +424,74 @@ struct LocationInputField: View {
                 .stroke(Color.gray.opacity(0.3), lineWidth: 1)
         )
         .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
+    }
+}
+
+struct DirectionsPanel: View {
+    let start: String
+    let destination: String
+    let distance: String
+    let directions: [String]
+    
+    var body: some View {
+        VStack(spacing: 0) {
+            // Header
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Directions")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                    Text("\(start) to \(destination) • \(distance) meters")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                }
+                
+                Spacer()
+            }
+            .padding()
+            .background(Color(.secondarySystemBackground))
+            
+            // Directions list
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    ForEach(Array(directions.enumerated()), id: \.offset) { index, direction in
+                        HStack(alignment: .top, spacing: 12) {
+                            Text("\(index + 1)")
+                                .font(.system(size: 14, weight: .bold))
+                                .foregroundColor(.white)
+                                .frame(width: 24, height: 24)
+                                .background(Circle().fill(Color.blue))
+                            
+                            Text(direction)
+                                .font(.body)
+                                .fixedSize(horizontal: false, vertical: true)
+                            
+                            Spacer()
+                        }
+                    }
+                }
+                .padding()
+            }
+        }
+        .background(Color(.systemBackground))
+        .cornerRadius(16, corners: [.topLeft, .topRight])
+        .shadow(radius: 5)
+    }
+}
+
+extension View {
+    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
+        clipShape( RoundedCorner(radius: radius, corners: corners) )
+    }
+}
+
+struct RoundedCorner: Shape {
+    var radius: CGFloat = .infinity
+    var corners: UIRectCorner = .allCorners
+
+    func path(in rect: CGRect) -> Path {
+        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+        return Path(path.cgPath)
     }
 }
 
