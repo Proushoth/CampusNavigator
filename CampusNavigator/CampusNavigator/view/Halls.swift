@@ -10,7 +10,7 @@ import SwiftUI
 struct Halls: View {
     
     @State private var selectedSegment = "All"
-    let segments = ["All", "Lecture", "Offices", "Events"]
+    let segments = ["Lecture", "Offices", "Events"]
     
     var body: some View {
         
@@ -33,65 +33,7 @@ struct Halls: View {
                     .pickerStyle(.segmented)
                     .padding()
                     
-                    if selectedSegment == "All"{
-                        ScrollView{
-                            InfoCardView1(
-                                icon: "house.fill",
-                                iconBackground: .green,
-                                title: "Library Quiet Zones",
-                                subtitle: "Moderate occupancy · Level 2 available"
-                            )
-                            InfoCardView(
-                                icon: "house.fill",
-                                iconBackground: .green,
-                                title: "Library Quiet Zones",
-                                subtitle: "Moderate occupancy · Level 2 available"
-                            )
-                            InfoCardView(
-                                icon: "house.fill",
-                                iconBackground: .green,
-                                title: "Library Quiet Zones",
-                                subtitle: "Moderate occupancy · Level 2 available"
-                            )
-                            InfoCardView(
-                                icon: "house.fill",
-                                iconBackground: .green,
-                                title: "Library Quiet Zones",
-                                subtitle: "Moderate occupancy · Level 2 available"
-                            )
-                            
-                            InfoCardView(
-                                icon: "house.fill",
-                                iconBackground: .green,
-                                title: "Library Quiet Zones",
-                                subtitle: "Moderate occupancy · Level 2 available"
-                            )
-                            
-                            InfoCardView(
-                                icon: "house.fill",
-                                iconBackground: .green,
-                                title: "Library Quiet Zones",
-                                subtitle: "Moderate occupancy · Level 2 available"
-                            )
-                            
-                            InfoCardView(
-                                icon: "house.fill",
-                                iconBackground: .green,
-                                title: "Library Quiet Zones",
-                                subtitle: "Moderate occupancy · Level 2 available"
-                            )
-                            
-                            InfoCardView(
-                                icon: "house.fill",
-                                iconBackground: .green,
-                                title: "Library Quiet Zones",
-                                subtitle: "Moderate occupancy · Level 2 available"
-                            )
-                            
-                        }
-                    }
-                    
-                    else if selectedSegment == "Lecture"{
+                    if selectedSegment == "Lecture"{
                         
                         ScrollView{
                             InfoCardView1(
