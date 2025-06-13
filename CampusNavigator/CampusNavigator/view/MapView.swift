@@ -278,38 +278,44 @@ struct CampusMapView: View {
     
     private var NavigationView: some View {
         VStack(spacing: 0) {
-            // Header with back button
-            HStack {
-                Button(action: {
-                    withAnimation {
-                        showNavigationView = false
-                    }
-                }) {
-                    HStack {
+            // Header with back button and route info
+            VStack(spacing: 0) {
+                HStack {
+                    Button(action: {
+                        withAnimation {
+                            showNavigationView = false
+                        }
+                    }) {
                         Image(systemName: "chevron.left")
-                        Text("Back")
+                            .font(.system(size: 20, weight: .medium))
+                            .foregroundColor(.primary)
+                            .frame(width: 40, height: 40)
+                            .background(Color(.systemBackground))
+                            .clipShape(Circle())
+                            .shadow(color: Color.black.opacity(0.1), radius: 2, x: 0, y: 1)
                     }
-                    .foregroundColor(.blue)
-                    .padding()
+                    
+                    Spacer()
+                    
+                    VStack(alignment: .trailing) {
+                        Text("\(startBuilding?.name ?? "") to \(endBuilding?.name ?? "")")
+                            .font(.headline)
+                            .fontWeight(.semibold)
+                        Text("\(distanceText) meters • Walking")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                    }
+                    
+                    Spacer().frame(width: 40) // Balance the back button
                 }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
                 
-                Spacer()
-                
-                VStack(alignment: .trailing) {
-                    Text("Navigating")
-                        .font(.headline)
-                    Text("\(startBuilding?.name ?? "") → \(endBuilding?.name ?? "")")
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                }
-                .padding(.trailing)
-                
-                Spacer()
+                Divider()
             }
-            .frame(height: 44)
             .background(Color(.systemBackground))
             
-            // Map View (full width)
+            // Map View
             ScrollView([.horizontal, .vertical]) {
                 ZStack {
                     Image("CampusMap")
@@ -349,11 +355,81 @@ struct CampusMapView: View {
                 distance: distanceText,
                 directions: getDirections()
             )
-            .frame(height: UIScreen.main.bounds.height * 0.4)
+            .frame(height: UIScreen.main.bounds.height * 0.35)
         }
         .background(Color(.systemBackground))
         .edgesIgnoringSafeArea(.bottom)
         .transition(.move(edge: .trailing))
+    }
+
+    struct DirectionsPanel: View {
+        let start: String
+        let destination: String
+        let distance: String
+        let directions: [String]
+        
+        var body: some View {
+            VStack(spacing: 0) {
+                // Route summary
+                HStack {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Route")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                        Text("\(start) → \(destination)")
+                            .font(.headline)
+                            .fontWeight(.semibold)
+                    }
+                    
+                    Spacer()
+                    
+                    VStack(alignment: .trailing, spacing: 4) {
+                        Text("Distance")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                        Text("\(distance) meters")
+                            .font(.headline)
+                            .fontWeight(.semibold)
+                    }
+                }
+                .padding()
+                .background(Color(.secondarySystemBackground))
+                .cornerRadius(12)
+                .padding(.horizontal)
+                .padding(.top)
+                
+                // Directions list
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 16) {
+                        ForEach(directions, id: \.self) { direction in
+                            HStack(alignment: .top, spacing: 12) {
+                                Image(systemName: "arrow.turn.up.right")
+                                    .font(.system(size: 16, weight: .bold))
+                                    .foregroundColor(.blue)
+                                    .frame(width: 24, height: 24)
+                                    .background(Circle().fill(Color.blue.opacity(0.2)))
+                                
+                                Text(direction)
+                                    .font(.body)
+                                    .fixedSize(horizontal: false, vertical: true)
+                                
+                                Spacer()
+                            }
+                            .padding(.horizontal)
+                            
+                            if direction != directions.last {
+                                Divider()
+                                    .padding(.leading, 44)
+                            }
+                        }
+                    }
+                    .padding(.vertical, 8)
+                }
+            }
+            .background(Color(.systemBackground))
+            .cornerRadius(16, corners: [.topLeft, .topRight])
+            .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: -5)
+        }
     }
 
     private func determineBuildingColor(building: Building) -> (fill: Color, border: Color) {
