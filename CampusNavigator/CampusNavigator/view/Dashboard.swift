@@ -69,7 +69,7 @@ struct HomeNavBar: View {
                 Spacer()
                 Image(uiImage: #imageLiteral(resourceName: "notifications"))
                     .onTapGesture {
-                    Notification()
+                       
                 }
             }
         
