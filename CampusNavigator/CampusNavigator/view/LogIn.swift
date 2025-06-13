@@ -124,7 +124,7 @@ struct ModernLoginView: View {
                 .foregroundColor(.red)
             }
             .font(.footnote)
-
+            .navigationBarBackButtonHidden(true) 
             Spacer()
         }
     }
