@@ -154,19 +154,25 @@ struct CampusMapView: View {
                     MainView
                 }
             }
-            .sheet(isPresented: $showBuildingPopup) {
-                if let building = selectedBuildingForPopup {
-                    BuildingPopupView(building: building) {
-                        navigateToBuildingDetails = true
+            .overlay(
+                Group {
+                    if showBuildingPopup, let building = selectedBuildingForPopup {
+                        BuildingPopupView(building: building) {
+                            showBuildingPopup = false
+                            navigateToBuildingDetails = true
+                        }
+                        .position(x: UIScreen.main.bounds.width/2,
+                                 y: UIScreen.main.bounds.height/2)
                     }
                 }
-            }
+            )
             .background(
                 NavigationLink(
                     destination: BuildingDetails(building: selectedBuildingForPopup ?? buildings[0]),
                     isActive: $navigateToBuildingDetails,
                     label: { EmptyView() }
                 )
+                .hidden()
             )
         }
     }
@@ -418,7 +424,6 @@ struct CampusMapView: View {
         return directions[key1] ?? directions[key2] ?? ["No directions available for this route"]
     }
 }
-
 struct BuildingPopupView: View {
     let building: Building
     let onFindPressed: () -> Void
@@ -430,53 +435,49 @@ struct BuildingPopupView: View {
     ]
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 8) {
             Text(building.name)
-                .font(.title2)
-                .fontWeight(.bold)
-                .padding(.bottom, 4)
-            
-            Text("Available Lecture Halls:")
                 .font(.headline)
+                .fontWeight(.bold)
+            
+            Divider()
+            
+            Text("Available Halls:")
+                .font(.subheadline)
+                .foregroundColor(.secondary)
             
             ForEach(halls, id: \.0) { hall in
                 HStack {
                     Image(systemName: "door.left.hand.open")
-                        .foregroundColor(.blue)
                     VStack(alignment: .leading) {
                         Text(hall.0)
-                            .font(.subheadline)
-                            .fontWeight(.medium)
                         Text(hall.1)
                             .font(.caption)
                             .foregroundColor(.gray)
                     }
-                    Spacer()
                 }
             }
             
             Spacer()
             
-            Button(action: {
-                onFindPressed()
-            }) {
-                HStack {
-                    Spacer()
-                    Text("Find")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                    Spacer()
-                }
-                .padding()
-                .background(Color.blue)
-                .cornerRadius(10)
+            Button(action: onFindPressed) {
+                Text("Find")
+                    .frame(maxWidth: .infinity)
+                    .padding(8)
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(8)
             }
         }
-        .padding()
-        .frame(width: 300, height: 300)
+        .padding(16)
+        .frame(width: 280, height: 280)
         .background(Color(.systemBackground))
-        .cornerRadius(15)
+        .cornerRadius(12)
         .shadow(radius: 10)
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+        )
     }
 }
 

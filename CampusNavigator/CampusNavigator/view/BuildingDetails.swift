@@ -13,22 +13,24 @@ struct BuildingDetails: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            // Toggle between Details and Halls
-            Picker(selection: $selectedTab, label: Text("")) {
+            // Segmented control for tabs
+            Picker("", selection: $selectedTab) {
                 Text("Details").tag(0)
                 Text("Halls").tag(1)
             }
             .pickerStyle(SegmentedPickerStyle())
-            .padding()
+            .padding(.horizontal)
+            .padding(.top)
             
-            // Content based on selection
-            if selectedTab == 0 {
+            // Tab content
+            TabView(selection: $selectedTab) {
                 BuildingDetailsView(building: building)
-            } else {
+                    .tag(0)
+                
                 LectureHallsView(building: building)
+                    .tag(1)
             }
-            
-            Spacer()
+            .tabViewStyle(.page(indexDisplayMode: .never))
         }
         .navigationTitle(building.name)
         .navigationBarTitleDisplayMode(.inline)
@@ -42,34 +44,43 @@ struct BuildingDetailsView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 // Building image placeholder
-                Rectangle()
-                    .fill(Color.gray.opacity(0.2))
-                    .frame(height: 200)
-                    .cornerRadius(12)
-                    .overlay(
-                        Image(systemName: "building.columns.fill")
-                            .font(.system(size: 50))
-                            .foregroundColor(.gray)
-                    )
+                ZStack {
+                    Rectangle()
+                        .fill(Color.blue.opacity(0.1))
+                        .frame(height: 150)
+                        .cornerRadius(10)
+                    
+                    Image(systemName: "building.columns.fill")
+                        .font(.system(size: 50))
+                        .foregroundColor(.blue.opacity(0.3))
+                }
+                .padding(.horizontal)
                 
                 // Building information
-                Text("About \(building.name)")
-                    .font(.title2)
-                    .fontWeight(.bold)
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Building Information")
+                        .font(.headline)
+                    
+                    DetailRow(icon: "clock", text: "Open Hours: 8:00 AM - 10:00 PM")
+                    DetailRow(icon: "phone", text: "Contact: +1 (123) 456-7890")
+                    DetailRow(icon: "person.2.fill", text: "Total Capacity: 500 people")
+                    DetailRow(icon: "location.fill", text: "Coordinates: X: \(Int(building.x)), Y: \(Int(building.y))")
+                }
+                .padding(.horizontal)
                 
-                Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.")
+                Divider()
+                    .padding(.vertical)
+                
+                Text("Description")
+                    .font(.headline)
+                    .padding(.horizontal)
+                
+                Text("The \(building.name) is one of the main buildings on campus. It features modern facilities and hosts various academic departments. The building has multiple lecture halls, study spaces, and faculty offices.")
                     .font(.body)
                     .foregroundColor(.secondary)
-                
-                // Additional details
-                VStack(alignment: .leading, spacing: 8) {
-                    DetailRow(icon: "clock", text: "Open 8:00 AM - 10:00 PM")
-                    DetailRow(icon: "phone", text: "+1 (123) 456-7890")
-                    DetailRow(icon: "person.2", text: "Capacity: 500 people")
-                }
-                .padding(.top, 8)
+                    .padding(.horizontal)
             }
-            .padding()
+            .padding(.vertical)
         }
     }
 }
@@ -77,23 +88,38 @@ struct BuildingDetailsView: View {
 struct LectureHallsView: View {
     let building: Building
     
-    // Sample lecture halls data
     let halls = [
-        ("Hall 101", "Capacity: 120", "Floor 1"),
-        ("Hall 201", "Capacity: 80", "Floor 2"),
-        ("Hall 202", "Capacity: 60", "Floor 2"),
-        ("Hall 301", "Capacity: 150", "Floor 3")
+        ("Hall 101", "Capacity: 120", "Floor 1", "Projector, Whiteboard", "Available"),
+        ("Hall 201", "Capacity: 80", "Floor 2", "Projector, Sound System", "In Use"),
+        ("Hall 202", "Capacity: 60", "Floor 2", "Whiteboard", "Available"),
+        ("Hall 301", "Capacity: 150", "Floor 3", "Projector, Sound System, Video Conferencing", "Maintenance")
     ]
     
     var body: some View {
-        ScrollView {
-            VStack(spacing: 12) {
-                ForEach(halls, id: \.0) { hall in
-                    LectureHallCard(name: hall.0, detail: hall.1, floor: hall.2)
+        List {
+            ForEach(halls, id: \.0) { hall in
+                VStack(alignment: .leading, spacing: 6) {
+                    HStack {
+                        Text(hall.0)
+                            .font(.headline)
+                        Spacer()
+                        Text(hall.3)
+                            .font(.caption)
+                            .foregroundColor(hall.4 == "Available" ? .green : (hall.4 == "In Use" ? .orange : .red))
+                    }
+                    
+                    Text("\(hall.1) • \(hall.2)")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                    
+                    Text(hall.3)
+                        .font(.caption)
+                        .foregroundColor(.blue)
                 }
+                .padding(.vertical, 8)
             }
-            .padding()
         }
+        .listStyle(.plain)
     }
 }
 
