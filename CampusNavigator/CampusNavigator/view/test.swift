@@ -127,8 +127,6 @@ struct ActionItem2: View {
     }
 }
 
-// MARK: - Info Card Section
-
 struct CampusHighlightsView2: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
