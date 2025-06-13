@@ -158,7 +158,7 @@ struct CampusMapView: View {
             VStack(spacing: 16) {
                 // Header
                 HStack {
-                HomeNavBar()
+//                HomeNavBar()
                     
                     Spacer()
     

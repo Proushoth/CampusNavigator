@@ -36,8 +36,8 @@ struct Docker: View {
             
             ProfileSetupView()
                 .tabItem {
-                    Image(systemName: "gear")
-                    Text("Settings")
+                    Image(systemName: "person")
+                    Text("Profile")
                 }
                 .tag(3)
         }
