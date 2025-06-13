@@ -153,88 +153,89 @@ struct CampusMapView: View {
     }
     
     private var MainView: some View {
-        ZStack(alignment: .bottom) {
-            VStack(spacing: 0) {
-                // Header and input fields in a compact group
-                VStack(spacing: 16) {
-                    // Header
-                    HStack {
-                        HStack(spacing: 0) {
-                            Text("Campus")
-                                .font(.system(size: 28, weight: .heavy))
-                                .foregroundColor(.red)
-                            Text("Navigator")
-                                .font(.system(size: 28, weight: .heavy))
-                                .foregroundColor(.black)
-                        }
-                        
-                        Spacer()
-                        
-                        Button(action: {
-                            // Notification action
-                        }) {
-                            Image(systemName: "bell.fill")
-                                .font(.system(size: 20))
-                                .foregroundColor(.gray)
-                                .padding(8)
-                                .background(Color.gray.opacity(0.1))
-                                .clipShape(Circle())
-                        }
+        VStack(spacing: 0) {
+            // Fixed header and input fields
+            VStack(spacing: 16) {
+                // Header
+                HStack {
+                    HStack(spacing: 0) {
+                        Text("Campus")
+                            .font(.system(size: 28, weight: .heavy))
+                            .foregroundColor(.red)
+                        Text("Navigator")
+                            .font(.system(size: 28, weight: .heavy))
+                            .foregroundColor(.black)
                     }
-                    .padding(.horizontal, 20)
-                    .padding(.top, 10)
-                    .offset(y: -40)
                     
-                    // Input fields
-                    VStack(spacing: 12) {
-                        LocationInputField(icon: "location.fill", text: $startText, placeholder: "Start Location")
-                        
-                        LocationInputField(icon: "flag.fill", text: $destinationText, placeholder: "Destination")
-                        
-                        // Distance and Directions button
-                        if !distanceText.isEmpty {
-                            HStack {
-                                Spacer()
-                                
-                                VStack(alignment: .trailing, spacing: 8) {
-                                    HStack {
-                                        Image(systemName: "arrow.right.circle.fill")
-                                            .foregroundColor(.blue)
-                                        Text("Distance: \(distanceText) meters")
-                                            .font(.subheadline)
-                                            .fontWeight(.medium)
-                                            .foregroundColor(.blue)
-                                    }
-                                    
-                                    Button(action: {
-                                        withAnimation {
-                                            showNavigationView = true
-                                        }
-                                    }) {
-                                        HStack {
-                                            Text("Navigate")
-                                            Image(systemName: "arrow.right")
-                                        }
-                                        .font(.subheadline)
-                                        .fontWeight(.medium)
-                                        .foregroundColor(.white)
-                                        .padding(.horizontal, 16)
-                                        .padding(.vertical, 8)
-                                        .background(Color.blue)
-                                        .cornerRadius(20)
-                                    }
-                                }
-                            }
-                        }
+                    Spacer()
+                    
+                    Button(action: {
+                        // Notification action
+                    }) {
+                        Image(systemName: "bell.fill")
+                            .font(.system(size: 20))
+                            .foregroundColor(.gray)
+                            .padding(8)
+                            .background(Color.gray.opacity(0.1))
+                            .clipShape(Circle())
                     }
-                    .padding(.horizontal, 20)
-                    .offset(y: -20)
                 }
-                .padding(.bottom, 16)
-                .background(Color(.systemBackground))
-                .zIndex(1)
+                .padding(.horizontal, 20)
+                .padding(.top, 10)
+                .offset(y: -30)
                 
-                // Map View
+                // Input fields
+                VStack(spacing: 12) {
+                    LocationInputField(icon: "location.fill", text: $startText, placeholder: "Start Location")
+                    
+                    LocationInputField(icon: "flag.fill", text: $destinationText, placeholder: "Destination")
+                }
+                .padding(.horizontal, 20)
+            }
+            .padding(.bottom, 16)
+            .background(Color(.systemBackground))
+            
+            // Navigation info (always takes up space but hidden when no selection)
+            VStack {
+                if startBuilding != nil && endBuilding != nil {
+                    HStack(spacing: 6) {
+                        Image(systemName: "arrow.right.circle.fill")
+                            .foregroundColor(.orange)
+                        Text("Distance: \(distanceText) meters")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                            .foregroundColor(.orange)
+                    }
+                    
+                    Button(action: {
+                        withAnimation {
+                            showNavigationView = true
+                        }
+                    }) {
+                        HStack {
+                            Text("Navigate")
+                            Image(systemName: "arrow.right")
+                        }
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 24)
+                        .padding(.vertical, 10)
+                        .background(Color.blue)
+                        .cornerRadius(24)
+                        .shadow(radius: 3)
+                    }
+                } else {
+                    // Empty space to maintain layout
+                    Spacer().frame(height: 44)
+                }
+            }
+            .frame(height: 80) // Fixed height to maintain layout
+            .animation(.easeInOut, value: startBuilding)
+            .animation(.easeInOut, value: endBuilding)
+            
+            // Map View (takes remaining space)
+            ZStack {
                 ScrollView([.horizontal, .vertical]) {
                     ZStack {
                         Image("CampusMap")
@@ -267,11 +268,12 @@ struct CampusMapView: View {
                         }
                     }
                     .frame(width: 800, height: 800)
+                    .offset(y: -20)
                 }
                 .frame(height: 450)
             }
-            .edgesIgnoringSafeArea(.bottom)
         }
+        .edgesIgnoringSafeArea(.bottom)
     }
     
     private var NavigationView: some View {
