@@ -88,35 +88,65 @@ struct BuildingDetailsView: View {
 struct LectureHallsView: View {
     let building: Building
     
-    let halls = [
-        ("Hall 101", "Capacity: 120", "Floor 1", "Projector, Whiteboard", "Available"),
-        ("Hall 201", "Capacity: 80", "Floor 2", "Projector, Sound System", "In Use"),
-        ("Hall 202", "Capacity: 60", "Floor 2", "Whiteboard", "Available"),
-        ("Hall 301", "Capacity: 150", "Floor 3", "Projector, Sound System, Video Conferencing", "Maintenance")
+    // Updated to include directions for each hall
+    let halls: [(name: String, detail: String, floor: String, equipment: String, status: String, directions: [String])] = [
+        ("Hall 101", "Capacity: 120", "Floor 1", "Projector, Whiteboard", "Available", [
+            "Enter through the main doors of the building",
+            "Take the central staircase to the first floor",
+            "Turn left at the top of the stairs",
+            "Walk past the study area",
+            "Hall 101 will be on your right"
+        ]),
+        ("Hall 201", "Capacity: 80", "Floor 2", "Projector, Sound System", "In Use", [
+            "Enter through the east entrance",
+            "Take the elevator to the second floor",
+            "Exit elevator and turn right",
+            "Walk down the corridor",
+            "Hall 201 is the second door on your left"
+        ]),
+        ("Hall 202", "Capacity: 60", "Floor 2", "Whiteboard", "Available", [
+            "Enter through the main lobby",
+            "Take the stairs to the second floor",
+            "Turn right at the landing",
+            "Hall 202 is at the end of the hallway"
+        ]),
+        ("Hall 301", "Capacity: 150", "Floor 3", "Projector, Sound System, Video Conferencing", "Maintenance", [
+            "Use the north entrance",
+            "Take the elevator to the third floor",
+            "Exit and turn left",
+            "Walk past the faculty offices",
+            "Hall 301 is the large room at the end"
+        ])
     ]
     
     var body: some View {
         List {
-            ForEach(halls, id: \.0) { hall in
-                VStack(alignment: .leading, spacing: 6) {
-                    HStack {
-                        Text(hall.0)
-                            .font(.headline)
-                        Spacer()
-                        Text(hall.3)
+            ForEach(halls, id: \.name) { hall in
+                NavigationLink(destination: Hall(
+                    hallName: hall.name,
+                    building: building,
+                    directions: hall.directions
+                )) {
+                    VStack(alignment: .leading, spacing: 6) {
+                        HStack {
+                            Text(hall.name)
+                                .font(.headline)
+                            Spacer()
+                            Text(hall.status)
+                                .font(.caption)
+                                .foregroundColor(hall.status == "Available" ? .green : (hall.status == "In Use" ? .orange : .red))
+                        }
+                        
+                        Text("\(hall.detail) • \(hall.floor)")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                        
+                        Text(hall.equipment)
                             .font(.caption)
-                            .foregroundColor(hall.4 == "Available" ? .green : (hall.4 == "In Use" ? .orange : .red))
+                            .foregroundColor(.blue)
                     }
-                    
-                    Text("\(hall.1) • \(hall.2)")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                    
-                    Text(hall.3)
-                        .font(.caption)
-                        .foregroundColor(.blue)
+                    .padding(.vertical, 8)
                 }
-                .padding(.vertical, 8)
             }
         }
         .listStyle(.plain)
