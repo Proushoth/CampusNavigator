@@ -16,7 +16,7 @@ struct CampusMapView: View {
     @State private var destinationText: String = ""
     @State private var distanceText: String = ""
 
-    // Static list of buildings and distances
+    // Static list of buildings
     private let buildings: [Building] = [
         Building(name: "Library", x: 220, y: 200, width: 60, height: 60),
         Building(name: "Lecture Hall", x: 500, y: 230, width: 60, height: 60),
@@ -26,86 +26,139 @@ struct CampusMapView: View {
         Building(name: "Student Center", x: 700, y: 400, width: 60, height: 60)
     ]
 
-    // Static distances between buildings
+    // Complete distances between all buildings
     private let distances: [String: Double] = [
+        // Library connections
         "Library-Lecture Hall": 120,
-        "Lecture Hall-Study Hall": 140,
-        "Study Hall-Auditorium": 110,
+        "Library-Study Hall": 90,
         "Library-Auditorium": 170,
+        "Library-Admin Office": 150,
+        "Library-Student Center": 180,
+        
+        // Lecture Hall connections
+        "Lecture Hall-Study Hall": 140,
         "Lecture Hall-Auditorium": 80,
-        "Auditorium-Admin Office": 60,
         "Lecture Hall-Admin Office": 90,
-        "Admin Office-Student Center": 150,
-        "Student Center-Library": 180
+        "Lecture Hall-Student Center": 200,
+        
+        // Study Hall connections
+        "Study Hall-Auditorium": 110,
+        "Study Hall-Admin Office": 130,
+        "Study Hall-Student Center": 160,
+        
+        // Auditorium connections
+        "Auditorium-Admin Office": 60,
+        "Auditorium-Student Center": 190,
+        
+        // Admin Office connections
+        "Admin Office-Student Center": 150
     ]
 
     var body: some View {
         VStack(spacing: 0) {
-            // Header
-            HStack {
+            // Header and input fields in a compact group
+            VStack(spacing: 16) {
+                // Header
                 HStack {
-                    Text("Campus")
-                        .font(.system(size: 25, weight: .bold))
-                        .foregroundColor(.red)
-                    Text("Navigator")
-                        .font(.system(size: 25, weight: .bold))
-                        .foregroundColor(.black)
-                }
-                Spacer()
-                Image(uiImage: #imageLiteral(resourceName: "notifications"))
-                    .onTapGesture {
-                        // Notification tap
+                    HStack(spacing: 0) {
+                        Text("Campus")
+                            .font(.system(size: 28, weight: .heavy))
+                            .foregroundColor(.red)
+                        Text("Navigator")
+                            .font(.system(size: 28, weight: .heavy))
+                            .foregroundColor(.black)
                     }
-            }
-            .padding(.horizontal)
-            .padding(.top, 12)
-
-            // Input fields
-            VStack(spacing: 12) {
-                TextField("Start Location", text: $startText)
-                    .textFieldStyle(EnhancedTextFieldStyle())
-                    .disabled(true)
-
-                TextField("Destination", text: $destinationText)
-                    .textFieldStyle(EnhancedTextFieldStyle())
-                    .disabled(true)
-
-                if !distanceText.isEmpty {
-                    Text("Distance: \(distanceText) meters")
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
+                    
+                    Spacer()
+                    
+                    Button(action: {
+                        // Notification action
+                    }) {
+                        Image(systemName: "bell.fill")
+                            .font(.system(size: 20))
+                            .foregroundColor(.gray)
+                            .padding(8)
+                            .background(Color.gray.opacity(0.1))
+                            .clipShape(Circle())
+                    }
                 }
+                .padding(.horizontal, 20)
+                .padding(.top, 10)
+                .offset(y: -40)
+                
+                // Input fields
+                VStack(spacing: 12) {
+                    LocationInputField(icon: "location.fill", text: $startText, placeholder: "Start Location")
+                    
+                    LocationInputField(icon: "flag.fill", text: $destinationText, placeholder: "Destination")
+                    
+                    // Always show the distance view, but make it transparent when empty
+                    HStack {
+                        Image(systemName: "arrow.right.circle.fill")
+                            .foregroundColor(distanceText.isEmpty ? .clear : .blue)
+                        Text(distanceText.isEmpty ? " " : "Distance: \(distanceText) meters")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                            .foregroundColor(distanceText.isEmpty ? .clear : .blue)
+                    }
+                    .padding(8)
+                    .background(distanceText.isEmpty ? Color.clear : Color.blue.opacity(0.1))
+                    .cornerRadius(8)
+                    .frame(height: 20) // Maintain consistent height
+                }
+                .padding(.horizontal, 20)
+                .offset(y: -20)
             }
-            .padding(.horizontal, 20)
-            .padding(.top, 10)
-
+            .padding(.bottom, 16)
+            .background(Color(.systemBackground))
+            .zIndex(1)
+            
             // Map View
             ScrollView([.horizontal, .vertical]) {
                 ZStack {
                     Image("CampusMap")
                         .resizable()
                         .frame(width: 800, height: 800)
-
+                    
                     ForEach(buildings) { building in
-                        Rectangle()
-                            .fill(Color.blue.opacity(0.3))
+                        let buildingColor = determineBuildingColor(building: building)
+                        
+                        RoundedRectangle(cornerRadius: 8)
+                            .fill(buildingColor.fill)
                             .frame(width: building.width, height: building.height)
                             .position(x: building.x, y: building.y)
                             .onTapGesture {
                                 handleTap(on: building)
                             }
                             .overlay(
-                                RoundedRectangle(cornerRadius: 5)
-                                    .stroke((building == startBuilding || building == endBuilding) ? Color.yellow : Color.clear, lineWidth: 2)
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(buildingColor.border, lineWidth: 3)
+                            )
+                            .overlay(
+                                Text(building.name)
+                                    .font(.system(size: 10, weight: .bold))
+                                    .foregroundColor(.white)
+                                    .padding(4)
+                                    .background(Color.black.opacity(0.5))
+                                    .cornerRadius(4)
+                                    .offset(y: building.height/2 + 12)
                             )
                     }
                 }
                 .frame(width: 800, height: 800)
             }
             .frame(height: 450)
-            .padding(.top, 30)
+        }
+        .edgesIgnoringSafeArea(.bottom)
+    }
 
-      
+    private func determineBuildingColor(building: Building) -> (fill: Color, border: Color) {
+        if building == startBuilding {
+            return (Color.green.opacity(0.3), Color.green)
+        } else if building == endBuilding {
+            return (Color.red.opacity(0.3), Color.red)
+        } else {
+            return (Color.blue.opacity(0.3), Color.clear)
         }
     }
 
@@ -141,18 +194,27 @@ struct CampusMapView: View {
     }
 }
 
-struct EnhancedTextFieldStyle: TextFieldStyle {
-    func _body(configuration: TextField<Self._Label>) -> some View {
-        configuration
-            .padding(12)
-            .background(Color.white)
-            .cornerRadius(8)
-            .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
-            .overlay(
-                RoundedRectangle(cornerRadius: 8)
-                    .stroke(Color.gray.opacity(0.2), lineWidth: 1)
-            )
-            .font(.system(size: 16, weight: .medium))
+struct LocationInputField: View {
+    let icon: String
+    @Binding var text: String
+    let placeholder: String
+    
+    var body: some View {
+        HStack {
+            Image(systemName: icon)
+                .foregroundColor(.gray)
+                .frame(width: 20)
+            TextField(placeholder, text: $text)
+                .font(.system(size: 16, weight: .medium))
+        }
+        .padding(12)
+        .background(Color(.systemBackground))
+        .cornerRadius(10)
+        .overlay(
+            RoundedRectangle(cornerRadius: 10)
+                .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+        )
+        .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
     }
 }
 
