@@ -7,8 +7,15 @@ struct Hall: View {
     
     var body: some View {
         VStack(spacing: 0) {
+            
+            HomeNavBar()
+                .padding(.top, UIApplication.shared.windows.first?.safeAreaInsets.top)
+                .edgesIgnoringSafeArea(.top)
+            
             ScrollView {
+               
                 VStack(alignment: .leading, spacing: 0) {
+                    
                     ZStack(alignment: .bottom) {
                         Rectangle()
                             .fill(Color.blue.opacity(0.2))
@@ -37,7 +44,7 @@ struct Hall: View {
                             .offset(y: 65)
                     }
                     .padding(.bottom, 65)
-                    .padding(.top, 90)
+                    .padding(.top,-10)
 
                     VStack(alignment: .leading, spacing: 20) {
                         VStack(alignment: .leading, spacing: 6) {
@@ -129,10 +136,10 @@ struct Hall: View {
                         
                         Spacer()
                     }
-                    .padding(.top, 20)
-                    .padding(.bottom, 30)
+                    .padding(.top, -10)
+                    .padding(.bottom, -10)
                 }
-                .navigationTitle(hallName)
+//                .navigationTitle(hallName)
             }
             .background(Color(.systemGroupedBackground))
         }
