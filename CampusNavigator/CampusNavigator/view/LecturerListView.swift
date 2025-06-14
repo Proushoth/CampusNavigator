@@ -29,24 +29,29 @@ struct LecturerRow: View {
     let lecturer: Lecturer
 
     var body: some View {
-        
-        VStack(alignment: .leading, spacing: 6) {
-            
-            Text(lecturer.name)
-                .font(.headline)
-            Text(lecturer.department)
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-            Text(lecturer.email)
-                .font(.footnote)
-                .foregroundColor(.blue)
-            Text("Office: \(lecturer.office)")
-                .font(.footnote)
-                .foregroundColor(.gray)
-        }
-        .padding(.vertical, 8)
-    }
-}
+            HStack(alignment: .top, spacing: 12) {
+
+                Image(systemName: "person.crop.circle.fill")
+                    .resizable()
+                    .frame(width: 40, height: 40)
+                    .foregroundColor(.red)
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(lecturer.name)
+                        .font(.headline)
+                    Text(lecturer.department)
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                    Text(lecturer.email)
+                        .font(.footnote)
+                        .foregroundColor(.red)
+                    Text("Office: \(lecturer.office)")
+                        .font(.footnote)
+                        .foregroundColor(.gray)
+                }
+            }
+            .padding(.vertical, 8)
+        }}
 
 // Main List View
 struct LecturerListView: View {
