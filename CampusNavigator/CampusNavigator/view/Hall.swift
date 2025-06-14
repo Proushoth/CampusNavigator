@@ -144,6 +144,7 @@ struct Hall: View {
             .background(Color(.systemGroupedBackground))
         }
         .edgesIgnoringSafeArea(.top)
+        .navigationBarBackButtonHidden(true)
     }
 }
 

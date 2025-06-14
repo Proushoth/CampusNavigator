@@ -31,7 +31,7 @@ struct Dashboard: View {
                 Spacer()
             }
             .padding(.top)
-            // Navigation destination based on enum value
+            
             .navigationDestination(for: QuickAction.self) { action in
                 switch action {
                 case .schedule:
@@ -174,26 +174,53 @@ struct CampusHighlightsView: View {
                 .padding(.horizontal)
 
             VStack(spacing: 16) {
+            NavigationLink {
+                LibraryView()
+            } label: {
                 InfoCardView(
                     icon: "house.fill",
                     iconBackground: .green,
                     title: "Library Quiet Zones",
                     subtitle: "Moderate occupancy · Level 2 available"
                 )
+            }
+            .buttonStyle(.plain)
 
+            NavigationLink {
+                    CanteenView()
+            } label: {
                 InfoCardView(
                     icon: "person.2.fill",
                     iconBackground: .orange,
                     title: "Student Cafeteria",
                     subtitle: "Busy · Wait time ~15 min"
                 )
+            }
+            .buttonStyle(.plain)
 
+            NavigationLink {
+                Event(
+                    eventName: "Fresher Party",
+                    building: Building(name: "Main Auditorium", x: 150, y: 180, width: 80, height: 80),
+                        time: "6:00 PM - 9:30 PM",
+                    description: "Join us for the annual Fresher Party to welcome the new batch of students! Enjoy an evening filled with music, dance, games, and refreshments. This is a great opportunity to meet your peers and make new friends. Don’t forget to bring your college ID.",
+                directions: [
+                                "Enter through the gate of the campus",
+                                "Walk straight towards the programme office",
+                                "Turn right at the canteen",
+                                "The Main Auditorium will be directly ahead"
+                            ],
+                            status: "Today"
+                        )
+                } label: {
                 InfoCardView(
                     icon: "calendar",
                     iconBackground: .purple,
                     title: "Freshers Mixer",
                     subtitle: "Tonight at 5 PM · Student Center"
                 )
+            }
+                .buttonStyle(.plain)
             }
             .padding(.horizontal)
         }
