@@ -36,7 +36,7 @@ struct CampusMapView: View {
         Building(name: "Study Hall", x: 140, y: 415, width: 280, height: 160, rotation: .degrees(-28)),
         Building(name: "Auditorium", x: 268, y: 660, width: 150, height: 230, rotation: .degrees(-45)),
         Building(name: "Admin Office", x: 420, y: 570, width: 150, height: 290, rotation: .degrees(-53)),
-        Building(name: "Student Center", x: 680, y: 370, width: 250, height: 220)
+        Building(name: "Student Center", x: 680, y: 370, width: 260, height: 220)
     ]
 
     private let distances: [String: Double] = [
@@ -207,14 +207,14 @@ struct CampusMapView: View {
                         ForEach(buildings) { building in
                             let buildingColor = determineBuildingColor(building: building)
                             
-                            // Create rotated view only if rotation is specified
                             let buildingView = RoundedRectangle(cornerRadius: 8)
-                                .fill(buildingColor.fill)
-                                .frame(width: building.width, height: building.height)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 8)
-                                        .stroke(buildingColor.border, lineWidth: 3)
-                                )
+                                    .fill(buildingColor.fill.opacity(0.01))
+                                    .frame(width: building.width, height: building.height)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 8)
+                                            .stroke(buildingColor.border.opacity(0.01), lineWidth: 3)
+                                    )
+                                
                             
                             Group {
                                 if let rotation = building.rotation {
@@ -340,7 +340,7 @@ struct CampusMapView: View {
                         let buildingColor = determineBuildingColor(building: building)
                         
                         RoundedRectangle(cornerRadius: 8)
-                            .fill(buildingColor.fill)
+                            .fill(buildingColor.fill.opacity(0.01))
                             .frame(width: building.width, height: building.height)
                             .position(x: building.x, y: building.y)
                             .onTapGesture {
