@@ -31,6 +31,7 @@ struct LecturerRow: View {
     var body: some View {
         
         VStack(alignment: .leading, spacing: 6) {
+            
             Text(lecturer.name)
                 .font(.headline)
             Text(lecturer.department)
@@ -51,10 +52,10 @@ struct LecturerRow: View {
 struct LecturerListView: View {
     var body: some View {
         NavigationStack {
+            HomeNavBar()
             List(sampleLecturers) { lecturer in
                 LecturerRow(lecturer: lecturer)
             }
-            .navigationTitle("Lecturers")
         }
     }
 }
