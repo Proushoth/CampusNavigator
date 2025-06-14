@@ -7,6 +7,16 @@ struct Building: Identifiable, Equatable {
     let y: CGFloat
     let width: CGFloat
     let height: CGFloat
+    let rotation: Angle?
+    
+    init(name: String, x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat, rotation: Angle? = nil) {
+        self.name = name
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.rotation = rotation
+    }
 }
 
 struct CampusMapView: View {
@@ -21,12 +31,12 @@ struct CampusMapView: View {
     @State private var navigateToBuildingDetails: Bool = false
     
     private let buildings: [Building] = [
-        Building(name: "Library", x: 220, y: 200, width: 60, height: 60),
-        Building(name: "Lecture Hall", x: 500, y: 230, width: 60, height: 60),
-        Building(name: "Study Hall", x: 150, y: 400, width: 60, height: 60),
-        Building(name: "Auditorium", x: 230, y: 700, width: 60, height: 60),
-        Building(name: "Admin Office", x: 440, y: 550, width: 60, height: 60),
-        Building(name: "Student Center", x: 700, y: 400, width: 60, height: 60)
+        Building(name: "Library", x: 170, y: 170, width: 270, height: 220),
+        Building(name: "Lecture Hall", x: 560, y: 150, width: 500, height: 190),
+        Building(name: "Study Hall", x: 140, y: 415, width: 280, height: 160, rotation: .degrees(-28)),
+        Building(name: "Auditorium", x: 268, y: 660, width: 150, height: 230, rotation: .degrees(-45)),
+        Building(name: "Admin Office", x: 420, y: 570, width: 150, height: 290, rotation: .degrees(-53)),
+        Building(name: "Student Center", x: 680, y: 370, width: 250, height: 220)
     ]
 
     private let distances: [String: Double] = [
@@ -158,14 +168,10 @@ struct CampusMapView: View {
                     }
                 }
             )
-            .background(
-                NavigationLink(
-                    destination: BuildingDetails(building: selectedBuildingForPopup ?? buildings[0]),
-                    isActive: $navigateToBuildingDetails,
-                    label: { EmptyView() }
-                )
-                .hidden()
-            )
+            .fullScreenCover(isPresented: $navigateToBuildingDetails) {
+                BuildingDetails(building: selectedBuildingForPopup ?? buildings[0])
+                    .navigationBarHidden(true)
+            }
         }
     }
     
@@ -201,30 +207,51 @@ struct CampusMapView: View {
                         ForEach(buildings) { building in
                             let buildingColor = determineBuildingColor(building: building)
                             
-                            RoundedRectangle(cornerRadius: 8)
+                            // Create rotated view only if rotation is specified
+                            let buildingView = RoundedRectangle(cornerRadius: 8)
                                 .fill(buildingColor.fill)
                                 .frame(width: building.width, height: building.height)
-                                .position(x: building.x, y: building.y)
-                                .onTapGesture {
-                                    handleTap(on: building)
-                                }
-                                .onLongPressGesture(minimumDuration: 0.5) {
-                                    selectedBuildingForPopup = building
-                                    showBuildingPopup = true
-                                }
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 8)
                                         .stroke(buildingColor.border, lineWidth: 3)
                                 )
-                                .overlay(
-                                    Text(building.name)
-                                        .font(.system(size: 10, weight: .bold))
-                                        .foregroundColor(.white)
-                                        .padding(4)
-                                        .background(Color.black.opacity(0.5))
-                                        .cornerRadius(4)
-                                        .offset(y: building.height/2 + 12)
-                                )
+                            
+                            Group {
+                                if let rotation = building.rotation {
+                                    // Apply rotation and counter-rotate the text
+                                    buildingView
+                                        .rotationEffect(rotation)
+                                        .overlay(
+                                            Text(building.name)
+                                                .rotationEffect(-rotation) // Counter-rotate text
+                                                .font(.system(size: 10, weight: .bold))
+                                                .foregroundColor(.white)
+                                                .padding(4)
+                                                .background(Color.black.opacity(0.5))
+                                                .cornerRadius(4)
+                                                .offset(y: building.height/2 + 12)
+                                        )
+                                } else {
+                                    buildingView
+                                        .overlay(
+                                            Text(building.name)
+                                                .font(.system(size: 10, weight: .bold))
+                                                .foregroundColor(.white)
+                                                .padding(4)
+                                                .background(Color.black.opacity(0.5))
+                                                .cornerRadius(4)
+                                                .offset(y: building.height/2 + 12)
+                                        )
+                                }
+                            }
+                            .position(x: building.x, y: building.y)
+                            .onTapGesture {
+                                handleTap(on: building)
+                            }
+                            .onLongPressGesture(minimumDuration: 0.5) {
+                                selectedBuildingForPopup = building
+                                showBuildingPopup = true
+                            }
                         }
                     }
                     .frame(width: 800, height: 800)
@@ -278,45 +305,36 @@ struct CampusMapView: View {
         VStack(spacing: 0) {
             VStack(spacing: 0) {
                 HStack {
-                    Button(action: {
-                        withAnimation {
-                            showNavigationView = false
-                        }
-                    }) {
-                        Image(systemName: "chevron.left")
-                            .font(.system(size: 20, weight: .medium))
-                            .foregroundColor(.primary)
-                            .frame(width: 40, height: 40)
-                            .background(Color(.systemBackground))
-                            .clipShape(Circle())
-                            .shadow(color: Color.black.opacity(0.1), radius: 2, x: 0, y: 1)
-                    }
-                    
                     Spacer()
                     
-                    VStack(alignment: .trailing) {
+                    VStack(alignment: .center) {
                         Text("\(startBuilding?.name ?? "") to \(endBuilding?.name ?? "")")
                             .font(.headline)
                             .fontWeight(.semibold)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 4)
+                            .background(Color(.systemGray5))
+                            .cornerRadius(8)
                         Text("\(distanceText) meters • Walking")
                             .font(.subheadline)
                             .foregroundColor(.gray)
                     }
+                    .offset(y: -4)
                     
-                    Spacer().frame(width: 40)
+                    Spacer()
                 }
                 .padding(.horizontal, 16)
-                .padding(.vertical, 12)
+                .padding(.vertical, 8)
                 
                 Divider()
             }
-            .background(Color(.systemBackground))
+            .background(Color(.systemGray6))
             
             ScrollView([.horizontal, .vertical]) {
                 ZStack {
                     Image("CampusMap")
                         .resizable()
-                        .frame(width: 800, height: 800)
+                        .frame(width: 600, height: 500)
                     
                     ForEach(buildings) { building in
                         let buildingColor = determineBuildingColor(building: building)
@@ -325,25 +343,22 @@ struct CampusMapView: View {
                             .fill(buildingColor.fill)
                             .frame(width: building.width, height: building.height)
                             .position(x: building.x, y: building.y)
+                            .onTapGesture {
+                                handleTap(on: building)
+                            }
+                            .onLongPressGesture(minimumDuration: 0.5) {
+                                selectedBuildingForPopup = building
+                                showBuildingPopup = true
+                            }
                             .overlay(
                                 RoundedRectangle(cornerRadius: 8)
                                     .stroke(buildingColor.border, lineWidth: 3)
                             )
-                            .overlay(
-                                Text(building.name)
-                                    .font(.system(size: 10, weight: .bold))
-                                    .foregroundColor(.white)
-                                    .padding(4)
-                                    .background(Color.black.opacity(0.5))
-                                    .cornerRadius(4)
-                                    .offset(y: building.height/2 + 12)
-                            )
                     }
                 }
-                .frame(width: 800, height: 800)
-                
+                .frame(width: 600, height: 500)
             }
-            .frame(maxHeight: .infinity)
+            .frame(height: 300)
             
             DirectionsPanel(
                 start: startBuilding?.name ?? "",
@@ -352,12 +367,13 @@ struct CampusMapView: View {
                 directions: getDirections()
             )
             .frame(height: UIScreen.main.bounds.height * 0.35)
+            Spacer()
         }
         .background(Color(.systemBackground))
         .edgesIgnoringSafeArea(.bottom)
         .transition(.move(edge: .trailing))
+        .padding(.bottom, 80)
     }
-
     private func determineBuildingColor(building: Building) -> (fill: Color, border: Color) {
         if building == startBuilding {
             return (Color.green.opacity(0.3), Color.green)

@@ -13,7 +13,6 @@ struct BuildingDetails: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            // Segmented control for tabs
             Picker("", selection: $selectedTab) {
                 Text("Details").tag(0)
                 Text("Halls").tag(1)
@@ -22,7 +21,6 @@ struct BuildingDetails: View {
             .padding(.horizontal)
             .padding(.top)
             
-            // Tab content
             TabView(selection: $selectedTab) {
                 BuildingDetailsView(building: building)
                     .tag(0)
@@ -32,18 +30,15 @@ struct BuildingDetails: View {
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
         }
-        .navigationTitle(building.name)
-        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarHidden(true)
     }
 }
-
 struct BuildingDetailsView: View {
     let building: Building
     
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                // Building image placeholder
                 ZStack {
                     Rectangle()
                         .fill(Color.blue.opacity(0.1))
@@ -56,7 +51,6 @@ struct BuildingDetailsView: View {
                 }
                 .padding(.horizontal)
                 
-                // Building information
                 VStack(alignment: .leading, spacing: 12) {
                     Text("Building Information")
                         .font(.headline)
@@ -88,7 +82,6 @@ struct BuildingDetailsView: View {
 struct LectureHallsView: View {
     let building: Building
     
-    // Updated to include directions for each hall
     let halls: [(name: String, detail: String, floor: String, equipment: String, status: String, directions: [String])] = [
         ("Hall 101", "Capacity: 120", "Floor 1", "Projector, Whiteboard", "Available", [
             "Enter through the main doors of the building",
@@ -197,3 +190,4 @@ struct DetailRow: View {
         }
     }
 }
+
