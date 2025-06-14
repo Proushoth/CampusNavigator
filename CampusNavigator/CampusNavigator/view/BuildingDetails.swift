@@ -78,7 +78,6 @@ struct BuildingDetailsView: View {
         }
     }
 }
-
 struct LectureHallsView: View {
     let building: Building
     
@@ -113,36 +112,30 @@ struct LectureHallsView: View {
     ]
     
     var body: some View {
-        List {
-            ForEach(halls, id: \.name) { hall in
-                NavigationLink(destination: Hall(
-                    hallName: hall.name,
-                    building: building,
-                    directions: hall.directions
-                )) {
-                    VStack(alignment: .leading, spacing: 6) {
-                        HStack {
-                            Text(hall.name)
-                                .font(.headline)
-                            Spacer()
-                            Text(hall.status)
-                                .font(.caption)
-                                .foregroundColor(hall.status == "Available" ? .green : (hall.status == "In Use" ? .orange : .red))
-                        }
-                        
-                        Text("\(hall.detail) • \(hall.floor)")
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                        
-                        Text(hall.equipment)
-                            .font(.caption)
-                            .foregroundColor(.blue)
+        ScrollView {
+            VStack(spacing: 0) {
+                ForEach(halls, id: \.name) { hall in
+                    NavigationLink(destination: Hall(
+                        hallName: hall.name,
+                        building: building,
+                        directions: hall.directions
+                    )) {
+                        HallRow(
+                            title: hall.name,
+                            subtitle: "\(hall.detail) • \(hall.floor)",
+                            detail: hall.equipment,
+                            status: hall.status
+                        )
                     }
-                    .padding(.vertical, 8)
+                    .buttonStyle(PlainButtonStyle())
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 4)
                 }
             }
+            .padding(.top, 8)
         }
-        .listStyle(.plain)
+        .background(Color(.systemGroupedBackground))
+        .navigationBarTitle("Lecture Halls", displayMode: .inline)
     }
 }
 
