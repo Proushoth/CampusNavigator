@@ -27,31 +27,33 @@ let sampleLecturers = [
 // View for each lecturer row
 struct LecturerRow: View {
     let lecturer: Lecturer
-
+    
     var body: some View {
-            HStack(alignment: .top, spacing: 12) {
-
-                Image(systemName: "person.crop.circle.fill")
-                    .resizable()
-                    .frame(width: 40, height: 40)
+        HStack( spacing: 12) {
+            
+            Image(systemName: "person.crop.circle.fill")
+                .resizable()
+                .frame(width: 40, height: 40)
+                .foregroundColor(.red)
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text(lecturer.name)
+                    .font(.headline)
+                Text(lecturer.department)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                Text(lecturer.email)
+                    .font(.footnote)
                     .foregroundColor(.red)
-                
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(lecturer.name)
-                        .font(.headline)
-                    Text(lecturer.department)
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                    Text(lecturer.email)
-                        .font(.footnote)
-                        .foregroundColor(.red)
-                    Text("Office: \(lecturer.office)")
-                        .font(.footnote)
-                        .foregroundColor(.gray)
-                }
+                Text("Office: \(lecturer.office)")
+                    .font(.footnote)
+                    .foregroundColor(.gray)
             }
-            .padding(.vertical, 8)
-        }}
+        }
+        .padding(.vertical, 8)
+        
+    }
+}
 
 // Main List View
 struct LecturerListView: View {
