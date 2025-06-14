@@ -20,7 +20,6 @@ struct CampusMapView: View {
     @State private var selectedBuildingForPopup: Building? = nil
     @State private var navigateToBuildingDetails: Bool = false
     
-    // Static list of buildings
     private let buildings: [Building] = [
         Building(name: "Library", x: 220, y: 200, width: 60, height: 60),
         Building(name: "Lecture Hall", x: 500, y: 230, width: 60, height: 60),
@@ -30,35 +29,28 @@ struct CampusMapView: View {
         Building(name: "Student Center", x: 700, y: 400, width: 60, height: 60)
     ]
 
-    // Complete distances between all buildings
     private let distances: [String: Double] = [
-        // Library connections
         "Library-Lecture Hall": 120,
         "Library-Study Hall": 90,
         "Library-Auditorium": 170,
         "Library-Admin Office": 150,
         "Library-Student Center": 180,
         
-        // Lecture Hall connections
         "Lecture Hall-Study Hall": 140,
         "Lecture Hall-Auditorium": 80,
         "Lecture Hall-Admin Office": 90,
         "Lecture Hall-Student Center": 200,
         
-        // Study Hall connections
         "Study Hall-Auditorium": 110,
         "Study Hall-Admin Office": 130,
         "Study Hall-Student Center": 160,
         
-        // Auditorium connections
         "Auditorium-Admin Office": 60,
         "Auditorium-Student Center": 190,
         
-        // Admin Office connections
         "Admin Office-Student Center": 150
     ]
     
-    // Hardcoded directions for each route
     private let directions: [String: [String]] = [
         "Library-Lecture Hall": [
             "Head northeast from Library main entrance",
@@ -179,71 +171,26 @@ struct CampusMapView: View {
     
     private var MainView: some View {
         VStack(spacing: 0) {
-            // Fixed header and input fields
             VStack(spacing: 16) {
-                // Header
                 HStack {
-
                     HomeNavBar()
-                        .offset(y: 20)
-                    
-                    Spacer()
-                    
+                        .offset(y:-90)
+                        .padding(.top, 50)
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 10)
-                .offset(y: -30)
                 
-                // Input fields
                 VStack(spacing: 12) {
                     LocationInputField(icon: "location.fill", text: $startText, placeholder: "Start Location")
                     
                     LocationInputField(icon: "flag.fill", text: $destinationText, placeholder: "Destination")
                 }
                 .padding(.horizontal, 20)
+                .offset(y:-90)
             }
             .padding(.bottom, 16)
             .background(Color(.systemBackground))
             
-            // Navigation info
-            VStack {
-                if startBuilding != nil && endBuilding != nil {
-                    HStack(spacing: 6) {
-                        Image(systemName: "arrow.right.circle.fill")
-                            .foregroundColor(.orange)
-                        Text("Distance: \(distanceText) meters")
-                            .font(.subheadline)
-                            .fontWeight(.medium)
-                            .foregroundColor(.orange)
-                    }
-                    
-                    Button(action: {
-                        withAnimation {
-                            showNavigationView = true
-                        }
-                    }) {
-                        HStack {
-                            Text("Navigate")
-                            Image(systemName: "arrow.right")
-                        }
-                        .font(.subheadline)
-                        .fontWeight(.medium)
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 24)
-                        .padding(.vertical, 10)
-                        .background(Color.blue)
-                        .cornerRadius(24)
-                        .shadow(radius: 3)
-                    }
-                } else {
-                    Spacer().frame(height: 44)
-                }
-            }
-            .frame(height: 80)
-            .animation(.easeInOut, value: startBuilding)
-            .animation(.easeInOut, value: endBuilding)
-            
-            // Map View
             ZStack {
                 ScrollView([.horizontal, .vertical]) {
                     ZStack {
@@ -281,17 +228,54 @@ struct CampusMapView: View {
                         }
                     }
                     .frame(width: 800, height: 800)
-                    .offset(y: -20)
                 }
-                .frame(height: 450)
+                .frame(height: 400)
+                .offset(y:-50)
             }
-        }
-        .edgesIgnoringSafeArea(.bottom)
-    }
+            
+            VStack(spacing: 8) {
+                HStack(spacing: 6) {
+                    Image(systemName: "arrow.right.circle.fill")
+                        .foregroundColor(.black)
+                    Text("Distance: \(distanceText) meters")
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                        .foregroundColor(.black)
+                }
+                .padding(.top, 10)
+                .opacity(startBuilding != nil && endBuilding != nil ? 1 : 0)
+                .animation(.easeInOut, value: startBuilding)
+                .animation(.easeInOut, value: endBuilding)
+                
+                Button(action: {
+                    withAnimation {
+                        showNavigationView = true
+                    }
+                }) {
+                    HStack {
+                        Text("Navigate")
+                        Image(systemName: "arrow.right")
+                    }
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 24)
+                    .padding(.vertical, 10)
+                    .background(Color.black)
+                    .cornerRadius(24)
+                    .shadow(radius: 3)
+                }
+                .padding(.bottom, 20)
+                .opacity(startBuilding != nil && endBuilding != nil ? 1 : 0)
+                .animation(.easeInOut, value: startBuilding)
+                .animation(.easeInOut, value: endBuilding)
+            }
+            .frame(maxWidth: .infinity)
+            .offset(y:-35)
+            .background(Color(.systemBackground))}}
     
     private var NavigationContentView: some View {
         VStack(spacing: 0) {
-            // Header with back button and route info
             VStack(spacing: 0) {
                 HStack {
                     Button(action: {
@@ -328,7 +312,6 @@ struct CampusMapView: View {
             }
             .background(Color(.systemBackground))
             
-            // Map View
             ScrollView([.horizontal, .vertical]) {
                 ZStack {
                     Image("CampusMap")
@@ -358,10 +341,10 @@ struct CampusMapView: View {
                     }
                 }
                 .frame(width: 800, height: 800)
+                
             }
             .frame(maxHeight: .infinity)
             
-            // Directions Panel
             DirectionsPanel(
                 start: startBuilding?.name ?? "",
                 destination: endBuilding?.name ?? "",
@@ -375,7 +358,6 @@ struct CampusMapView: View {
         .transition(.move(edge: .trailing))
     }
 
-    // Helper functions
     private func determineBuildingColor(building: Building) -> (fill: Color, border: Color) {
         if building == startBuilding {
             return (Color.green.opacity(0.3), Color.green)
@@ -398,7 +380,6 @@ struct CampusMapView: View {
             destinationText = building.name
             distanceText = computeDistance(from: startBuilding!, to: endBuilding!)
         } else {
-            // Reset if tapped again
             startBuilding = nil
             endBuilding = nil
             startText = ""
@@ -424,6 +405,7 @@ struct CampusMapView: View {
         return directions[key1] ?? directions[key2] ?? ["No directions available for this route"]
     }
 }
+
 struct BuildingPopupView: View {
     let building: Building
     let onFindPressed: () -> Void
@@ -513,7 +495,6 @@ struct DirectionsPanel: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            // Route summary
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Route")
@@ -541,7 +522,6 @@ struct DirectionsPanel: View {
             .padding(.horizontal)
             .padding(.top)
             
-            // Directions list
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     ForEach(directions, id: \.self) { direction in
