@@ -218,12 +218,11 @@ struct CampusMapView: View {
                             
                             Group {
                                 if let rotation = building.rotation {
-                                    // Apply rotation and counter-rotate the text
                                     buildingView
                                         .rotationEffect(rotation)
                                         .overlay(
                                             Text(building.name)
-                                                .rotationEffect(-rotation) // Counter-rotate text
+                                                .rotationEffect(-rotation)
                                                 .font(.system(size: 10, weight: .bold))
                                                 .foregroundColor(.white)
                                                 .padding(4)
@@ -231,16 +230,39 @@ struct CampusMapView: View {
                                                 .cornerRadius(4)
                                                 .offset(y: building.height/2 + 12)
                                         )
+                                        .overlay(
+                                            // Location icon for selected buildings
+                                            Group {
+                                                if building == startBuilding {
+                                                    Image(systemName: "location.fill")
+                                                        .font(.title2)
+                                                        .foregroundColor(.green)
+                                                        .background(Circle().fill(Color.white).frame(width: 30, height: 30))
+                                                } else if building == endBuilding {
+                                                    Image(systemName: "flag.fill")
+                                                        .font(.title2)
+                                                        .foregroundColor(.red)
+                                                        .background(Circle().fill(Color.white).frame(width: 30, height: 30))
+                                                }
+                                            }
+                                        )
                                 } else {
                                     buildingView
                                         .overlay(
-                                            Text(building.name)
-                                                .font(.system(size: 10, weight: .bold))
-                                                .foregroundColor(.white)
-                                                .padding(4)
-                                                .background(Color.black.opacity(0.5))
-                                                .cornerRadius(4)
-                                                .offset(y: building.height/2 + 12)
+                                            // Location icon for selected buildings
+                                            Group {
+                                                if building == startBuilding {
+                                                    Image(systemName: "location.fill")
+                                                        .font(.title2)
+                                                        .foregroundColor(.green)
+                                                        .background(Circle().fill(Color.white).frame(width: 30, height: 30))
+                                                } else if building == endBuilding {
+                                                    Image(systemName: "flag.fill")
+                                                        .font(.title2)
+                                                        .foregroundColor(.red)
+                                                        .background(Circle().fill(Color.white).frame(width: 30, height: 30))
+                                                }
+                                            }
                                         )
                                 }
                             }
