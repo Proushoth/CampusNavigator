@@ -80,12 +80,10 @@ struct HomeNavBar: View {
 struct NextClassCard: View {
     var body: some View {
         HStack(alignment: .center, spacing: 15) {
-            // Calendar Icon
             Image(systemName: "calendar")
                 .font(.system(size: 24))
                 .foregroundColor(.white)
 
-            // Text Content
             VStack(alignment: .leading, spacing: 4) {
                 Text("Next Class")
                     .font(.subheadline)
@@ -103,7 +101,7 @@ struct NextClassCard: View {
 
             Spacer()
 
-            // Chevron
+            
             Image(systemName: "chevron.right")
                 .foregroundColor(.white)
         }
@@ -138,7 +136,7 @@ struct QuickActionsView: View {
                 }
 
                 NavigationLink(value: QuickAction.help) {
-                    ActionItem(icon: "magnifyingglass", label: "Ask for Help")
+                    ActionItem(icon: "person", label: "Profile")
                 }
             }
             .frame(maxWidth: .infinity)

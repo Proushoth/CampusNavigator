@@ -34,10 +34,10 @@ struct Docker: View {
                 }
                 .tag(2)
             
-            ProfileSetupView()
+            LecturerListView()
                 .tabItem {
                     Image(systemName: "person")
-                    Text("Profile")
+                    Text("Contact")
                 }
                 .tag(3)
         }
