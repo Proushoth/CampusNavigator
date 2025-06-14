@@ -172,6 +172,7 @@ struct CampusMapView: View {
                 BuildingDetails(building: selectedBuildingForPopup ?? buildings[0])
                     .navigationBarHidden(true)
             }
+            .navigationBarBackButtonHidden(true)
         }
     }
     
@@ -442,6 +443,7 @@ struct CampusMapView: View {
         let key2 = "\(end.name)-\(start.name)"
         return directions[key1] ?? directions[key2] ?? ["No directions available for this route"]
     }
+    
 }
 
 struct BuildingPopupView: View {
@@ -585,13 +587,16 @@ struct DirectionsPanel: View {
                     }
                 }
                 .padding(.vertical, 8)
+                .navigationBarBackButtonHidden(true)
             }
         }
         .background(Color(.systemBackground))
         .cornerRadius(16, corners: [.topLeft, .topRight])
         .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: -5)
     }
+    
 }
+
 
 extension View {
     func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
@@ -611,4 +616,5 @@ struct RoundedCorner: Shape {
 
 #Preview {
     CampusMapView()
+       
 }

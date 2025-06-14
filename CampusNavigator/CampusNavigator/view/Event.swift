@@ -27,6 +27,7 @@ struct Event: View {
     
     var body: some View {
         VStack(spacing: 0) {
+            
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
                     ZStack(alignment: .bottom) {
@@ -58,7 +59,7 @@ struct Event: View {
                             .offset(y: 65)
                     }
                     .padding(.bottom, 65)
-                    .padding(.top, 90)
+                    .padding(.top, 20)
                     
                     VStack(alignment: .leading, spacing: 20) {
                         VStack(alignment: .leading, spacing: 8) {

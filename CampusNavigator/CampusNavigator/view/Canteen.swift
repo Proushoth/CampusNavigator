@@ -147,6 +147,7 @@ struct CanteenView: View {
                 }
                 .background(Color(.systemGroupedBackground))
             }
+            .navigationBarBackButtonHidden(true)
             .edgesIgnoringSafeArea(.top)
         }
     }

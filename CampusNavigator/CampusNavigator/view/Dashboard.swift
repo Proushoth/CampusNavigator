@@ -35,7 +35,7 @@ struct Dashboard: View {
             .navigationDestination(for: QuickAction.self) { action in
                 switch action {
                 case .schedule:
-                    CalendarToDoView()
+                    CalendarTaskView()
                 case .findBuilding:
                     CampusMapView()
                 case .help:
@@ -223,6 +223,7 @@ struct CampusHighlightsView: View {
                 .buttonStyle(.plain)
             }
             .padding(.horizontal)
+            .navigationBarBackButtonHidden(true)
         }
     }
 }
