@@ -1,32 +1,44 @@
 //
-//  Hall.swift
+//  Event.swift
 //  CampusNavigator
 //
-//  Created by Abdul Rahuman on 2025-06-13.
+//  Created by Abdul Rahuman on 2025-06-14.
 //
 
 import SwiftUI
 
-struct Hall: View {
-    let hallName: String
+struct Event: View {
+    let eventName: String
     let building: Building
+    let time: String
+    let description: String
     let directions: [String]
+    let status: String
+    
+    var statusColor: Color {
+        switch status {
+        case "Today": return .blue
+        case "Tomorrow": return .purple
+        case "Upcoming": return .orange
+        case "Completed": return .gray
+        default: return .green
+        }
+    }
     
     var body: some View {
         VStack(spacing: 0) {
-           
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
                     ZStack(alignment: .bottom) {
                         Rectangle()
-                            .fill(Color.blue.opacity(0.2))
+                            .fill(Color.purple.opacity(0.2))
                             .frame(height: 240)
                             .overlay(
-                                Image(systemName: "door.left.hand.open")
+                                Image(systemName: "calendar")
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 80, height: 80)
-                                    .foregroundColor(.blue.opacity(0.5)))
+                                    .foregroundColor(.purple.opacity(0.5)))
                         
                         Circle()
                             .fill(Color.white)
@@ -34,25 +46,23 @@ struct Hall: View {
                             .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 5)
                             .overlay(
                                 Circle()
-                                    .stroke(Color.blue, lineWidth: 3)
+                                    .stroke(Color.purple, lineWidth: 3)
                             )
                             .overlay(
-                                Image(systemName: "number.square.fill")
+                                Image(systemName: "party.popper.fill")
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 60, height: 60)
-                                    .foregroundColor(.blue)
+                                    .foregroundColor(.purple)
                             )
                             .offset(y: 65)
                     }
                     .padding(.bottom, 65)
                     .padding(.top, 90)
-
-                    
                     
                     VStack(alignment: .leading, spacing: 20) {
                         VStack(alignment: .leading, spacing: 6) {
-                            Text(hallName)
+                            Text(eventName)
                                 .font(.system(size: 32, weight: .bold, design: .rounded))
                                 .foregroundColor(.primary)
                             
@@ -61,7 +71,7 @@ struct Hall: View {
                                     .font(.system(size: 18, weight: .medium, design: .default))
                                     .foregroundColor(.secondary)
                                 
-                                Label("Lecture Hall", systemImage: "speaker.wave.2.fill")
+                                Label(time, systemImage: "clock.fill")
                                     .font(.system(size: 18, weight: .medium, design: .default))
                                     .foregroundColor(.secondary)
                             }
@@ -70,13 +80,13 @@ struct Hall: View {
                         
                         VStack(alignment: .leading, spacing: 10) {
                             HStack {
-                                Text("CURRENT STATUS")
+                                Text("EVENT STATUS")
                                     .font(.system(size: 14, weight: .semibold))
                                     .foregroundColor(.secondary)
                                 Spacer()
-                                Text("Available")
+                                Text(status)
                                     .font(.system(size: 16, weight: .bold))
-                                    .foregroundColor(.green)
+                                    .foregroundColor(statusColor)
                             }
                             
                             ZStack(alignment: .leading) {
@@ -85,9 +95,9 @@ struct Hall: View {
                                     .foregroundColor(Color(.systemGray5))
                                 
                                 Capsule()
-                                    .frame(width: UIScreen.main.bounds.width * 0.3, height: 8)
-                                    .foregroundColor(.green)
-                                    .shadow(color: .green.opacity(0.3), radius: 4, x: 0, y: 2)
+                                    .frame(width: UIScreen.main.bounds.width * (status == "Today" ? 0.9 : 0.5), height: 8)
+                                    .foregroundColor(statusColor)
+                                    .shadow(color: statusColor.opacity(0.3), radius: 4, x: 0, y: 2)
                             }
                         }
                         .padding(.horizontal, 20)
@@ -97,7 +107,23 @@ struct Hall: View {
                             .padding(.horizontal, 20)
                         
                         VStack(alignment: .leading, spacing: 12) {
-                            Text("Directions from \(building.name) Entrance")
+                            Text("About the Event")
+                                .font(.system(size: 20, weight: .semibold, design: .rounded))
+                                .foregroundColor(.primary)
+                            
+                            Text(description)
+                                .font(.system(size: 16, weight: .regular))
+                                .foregroundColor(.secondary)
+                                .lineSpacing(4)
+                        }
+                        .padding(.horizontal, 20)
+                        
+                        Divider()
+                            .padding(.vertical, 8)
+                            .padding(.horizontal, 20)
+                        
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("Directions to Event Location")
                                 .font(.system(size: 20, weight: .semibold, design: .rounded))
                                 .foregroundColor(.primary)
                             
@@ -106,9 +132,9 @@ struct Hall: View {
                                     HStack(alignment: .top, spacing: 12) {
                                         Image(systemName: "arrow.turn.up.right")
                                             .font(.system(size: 16, weight: .bold))
-                                            .foregroundColor(.blue)
+                                            .foregroundColor(.purple)
                                             .frame(width: 24, height: 24)
-                                            .background(Circle().fill(Color.blue.opacity(0.2)))
+                                            .background(Circle().fill(Color.purple.opacity(0.2)))
                                         
                                         Text(direction)
                                             .font(.system(size: 16, weight: .regular))
@@ -127,7 +153,7 @@ struct Hall: View {
                     .padding(.top, 20)
                     .padding(.bottom, 30)
                 }
-                .navigationTitle(hallName)
+                .navigationTitle(eventName)
             }
             .background(Color(.systemGroupedBackground))
         }
@@ -135,18 +161,20 @@ struct Hall: View {
     }
 }
 
-struct Hall_Previews: PreviewProvider {
+struct Event_Previews: PreviewProvider {
     static var previews: some View {
-        Hall(
-            hallName: "Hall 101",
-            building: Building(name: "Library", x: 220, y: 200, width: 60, height: 60),
+        Event(
+            eventName: "Career Fair",
+            building: Building(name: "Student Center", x: 220, y: 200, width: 60, height: 60),
+            time: "10:00 AM - 4:00 PM",
+            description: "Annual job fair featuring top companies from various industries. Open to all students and alumni. Bring multiple copies of your resume and dress professionally.",
             directions: [
-                "Enter through the main doors of the Library",
-                "Take the central staircase to the first floor",
-                "Turn left at the top of the stairs",
-                "Walk past the study area",
-                "Hall 101 will be on your right, just before the restrooms"
-            ]
+                "Enter through the main doors of the Student Center",
+                "Walk straight past the information desk",
+                "Take the escalator to the second floor",
+                "The event will be in the Grand Ballroom on your right"
+            ],
+            status: "Today"
         )
     }
 }

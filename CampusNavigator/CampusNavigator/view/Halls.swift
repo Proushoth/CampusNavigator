@@ -11,7 +11,6 @@ struct Halls: View {
     @State private var selectedSegment = "Lecture"
     let segments = ["Lecture", "Offices", "Events"]
     
-    // Sample data for each segment
     let lectureHalls: [(name: String, detail: String, floor: String, equipment: String, status: String)] = [
         ("Hall 101", "Capacity: 120", "Floor 1", "Projector, Whiteboard", "Available"),
         ("Hall 201", "Capacity: 80", "Floor 2", "Projector, Sound System", "In Use"),
@@ -36,13 +35,10 @@ struct Halls: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
-                // Top Navbar
                 HomeNavBar()
                 
-                // Search Bar
                 SearchBar()
                 
-                // Segmented Control
                 Picker("View", selection: $selectedSegment) {
                     ForEach(segments, id: \.self) { view in
                         Text(view)
@@ -53,39 +49,67 @@ struct Halls: View {
                 .padding(.top, 8)
                 .padding(.bottom, 12)
                 
-                // Content based on selection
                 Group {
                     if selectedSegment == "Lecture" {
                         List {
                             ForEach(lectureHalls, id: \.name) { hall in
-                                HallRow(
-                                    title: hall.name,
-                                    subtitle: "\(hall.detail) • \(hall.floor)",
-                                    detail: hall.equipment,
-                                    status: hall.status
-                                )
+                                NavigationLink(destination: Hall(
+                                    hallName: hall.name,
+                                    building: Building(name: "Main Building", x: 0, y: 0, width: 0, height: 0),
+                                    directions: ["Enter building", "Go to floor \(hall.floor)", "Follow signs to \(hall.name)"]
+                                )) {
+                                    HallRow(
+                                        title: hall.name,
+                                        subtitle: "\(hall.detail) • \(hall.floor)",
+                                        detail: hall.equipment,
+                                        status: hall.status
+                                    )
+                                }
+                                .listRowInsets(EdgeInsets())
+                                .listRowSeparator(.hidden)
                             }
                         }
                     } else if selectedSegment == "Offices" {
                         List {
                             ForEach(offices, id: \.name) { office in
-                                HallRow(
-                                    title: office.name,
-                                    subtitle: "\(office.detail) • \(office.floor)",
-                                    detail: office.department,
+                                NavigationLink(destination: Office(
+                                    officeName: office.name,
+                                    building: Building(name: "Main Building", x: 0, y: 0, width: 0, height: 0),
+                                    department: office.department,
+                                    directions: ["Enter building", "Go to floor \(office.floor)", "Follow signs to \(office.name)"],
                                     status: office.status
-                                )
+                                )) {
+                                    HallRow(
+                                        title: office.name,
+                                        subtitle: "\(office.detail) • \(office.floor)",
+                                        detail: office.department,
+                                        status: office.status
+                                    )
+                                }
+                                .listRowInsets(EdgeInsets())
+                                .listRowSeparator(.hidden)
                             }
                         }
                     } else {
                         List {
                             ForEach(events, id: \.name) { event in
-                                HallRow(
-                                    title: event.name,
-                                    subtitle: "\(event.time) • \(event.location)",
-                                    detail: event.detail,
+                                NavigationLink(destination: Event(
+                                    eventName: event.name,
+                                    building: Building(name: event.location, x: 0, y: 0, width: 0, height: 0),
+                                    time: event.time,
+                                    description: event.detail,
+                                    directions: ["Enter \(event.location)", "Follow signs to event location", "Check in at registration"],
                                     status: event.status
-                                )
+                                )) {
+                                    HallRow(
+                                        title: event.name,
+                                        subtitle: "\(event.time) • \(event.location)",
+                                        detail: event.detail,
+                                        status: event.status
+                                    )
+                                }
+                                .listRowInsets(EdgeInsets())
+                                .listRowSeparator(.hidden)
                             }
                         }
                     }
@@ -96,7 +120,6 @@ struct Halls: View {
         }
     }
 }
-
 struct HallRow: View {
     let title: String
     let subtitle: String
@@ -121,31 +144,73 @@ struct HallRow: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            HStack {
-                Text(title)
-                    .font(.headline)
-                Spacer()
-                Text(status)
-                    .font(.caption)
-                    .foregroundColor(statusColor)
-                    .padding(4)
-                    .background(statusColor.opacity(0.2))
-                    .cornerRadius(4)
+        HStack(alignment: .center, spacing: 15) {
+            statusIndicator
+            
+            VStack(alignment: .leading, spacing: 8) {
+                header
+                subtitleView
+                detailView
             }
-            
-            Text(subtitle)
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-            
-            Text(detail)
-                .font(.caption)
-                .foregroundColor(.blue)
-                .padding(.top, 2)
         }
-        .padding(.vertical, 8)
+        .frame(minHeight: 80)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 16)
+        .background(Color(.systemBackground))
+        .cornerRadius(12)
+        .shadow(color: Color.black.opacity(0.15), radius: 5, x: 0, y: 2)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 4)
+        .listRowInsets(EdgeInsets())
+        .listRowSeparator(.hidden)
+    }
+    
+    private var statusIndicator: some View {
+        RoundedRectangle(cornerRadius: 4)
+            .fill(statusColor)
+            .frame(width: 6, height: 65)
+    }
+    
+    private var header: some View {
+        HStack(alignment: .firstTextBaseline) {
+            Text(title)
+                .font(.headline.weight(.semibold))
+                .foregroundColor(.primary)
+            
+            Spacer()
+            
+            Text(status)
+                .font(.system(size: 12, weight: .medium))
+                .foregroundColor(statusColor)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 4)
+                .background(statusColor.opacity(0.1))
+                .cornerRadius(10)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(statusColor.opacity(0.3), lineWidth: 1)
+                )
+        }
+    }
+    
+    private var subtitleView: some View {
+        Text(subtitle)
+            .font(.subheadline)
+            .foregroundColor(.secondary)
+            .lineLimit(2)
+    }
+    
+    private var detailView: some View {
+        Text(detail)
+            .font(.caption)
+            .foregroundColor(.blue)
+            .padding(.vertical, 4)
+            .padding(.horizontal, 8)
+            .background(Color.blue.opacity(0.1))
+            .cornerRadius(6)
     }
 }
+
 
 struct Halls_Previews: PreviewProvider {
     static var previews: some View {
