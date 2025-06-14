@@ -1,10 +1,3 @@
-//
-//  Hall.swift
-//  CampusNavigator
-//
-//  Created by Abdul Rahuman on 2025-06-13.
-//
-
 import SwiftUI
 
 struct Hall: View {
@@ -14,7 +7,6 @@ struct Hall: View {
     
     var body: some View {
         VStack(spacing: 0) {
-           
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
                     ZStack(alignment: .bottom) {
@@ -22,11 +14,11 @@ struct Hall: View {
                             .fill(Color.blue.opacity(0.2))
                             .frame(height: 240)
                             .overlay(
-                                Image(systemName: "door.left.hand.open")
+                                Image("square")
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 80, height: 80)
-                                    .foregroundColor(.blue.opacity(0.5)))
+                            )
                         
                         Circle()
                             .fill(Color.white)
@@ -37,26 +29,23 @@ struct Hall: View {
                                     .stroke(Color.blue, lineWidth: 3)
                             )
                             .overlay(
-                                Image(systemName: "number.square.fill")
+                                Image("rectangle")
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 60, height: 60)
-                                    .foregroundColor(.blue)
                             )
                             .offset(y: 65)
                     }
                     .padding(.bottom, 65)
                     .padding(.top, 90)
 
-                    
-                    
                     VStack(alignment: .leading, spacing: 20) {
                         VStack(alignment: .leading, spacing: 6) {
                             Text(hallName)
                                 .font(.system(size: 32, weight: .bold, design: .rounded))
                                 .foregroundColor(.primary)
                             
-                            HStack(spacing: 16) {
+                            VStack(alignment: .leading, spacing: 4) {
                                 Label(building.name, systemImage: "building.columns")
                                     .font(.system(size: 18, weight: .medium, design: .default))
                                     .foregroundColor(.secondary)
@@ -68,27 +57,43 @@ struct Hall: View {
                         }
                         .padding(.horizontal, 20)
                         
-                        VStack(alignment: .leading, spacing: 10) {
+                        VStack(alignment: .leading, spacing: 8) {
                             HStack {
-                                Text("CURRENT STATUS")
+                                Text("CURRENT LECTURE")
                                     .font(.system(size: 14, weight: .semibold))
                                     .foregroundColor(.secondary)
                                 Spacer()
-                                Text("Available")
+                                Text("In Session")
                                     .font(.system(size: 16, weight: .bold))
-                                    .foregroundColor(.green)
+                                    .foregroundColor(.orange)
                             }
                             
-                            ZStack(alignment: .leading) {
-                                Capsule()
-                                    .frame(height: 8)
-                                    .foregroundColor(Color(.systemGray5))
+                            VStack(alignment: .leading, spacing: 6) {
+                                Text("Advanced Computer Science")
+                                    .font(.system(size: 18, weight: .semibold))
+                                    .foregroundColor(.primary)
                                 
-                                Capsule()
-                                    .frame(width: UIScreen.main.bounds.width * 0.3, height: 8)
-                                    .foregroundColor(.green)
-                                    .shadow(color: .green.opacity(0.3), radius: 4, x: 0, y: 2)
+                                Text("Prof. Sarah Johnson")
+                                    .font(.system(size: 16, weight: .medium))
+                                    .foregroundColor(.secondary)
+                                
+                                HStack {
+                                    Image(systemName: "clock")
+                                    Text("10:00 AM - 11:30 AM")
+                                        .font(.system(size: 15, weight: .medium))
+                                }
+                                .foregroundColor(.secondary)
                             }
+                            .padding(12)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(Color.orange.opacity(0.1))
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .stroke(Color.orange.opacity(0.3), lineWidth: 1)
+                                    )
+                            )
                         }
                         .padding(.horizontal, 20)
                         
