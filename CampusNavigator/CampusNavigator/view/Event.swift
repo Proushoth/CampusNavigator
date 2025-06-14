@@ -61,46 +61,60 @@ struct Event: View {
                     .padding(.top, 90)
                     
                     VStack(alignment: .leading, spacing: 20) {
-                        VStack(alignment: .leading, spacing: 6) {
+                        VStack(alignment: .leading, spacing: 8) {
                             Text(eventName)
                                 .font(.system(size: 32, weight: .bold, design: .rounded))
                                 .foregroundColor(.primary)
                             
-                            HStack(spacing: 16) {
+                            VStack(alignment: .leading, spacing: 4) {
                                 Label(building.name, systemImage: "building.columns")
                                     .font(.system(size: 18, weight: .medium, design: .default))
                                     .foregroundColor(.secondary)
                                 
-                                Label(time, systemImage: "clock.fill")
+                                Label("June 14, 2025", systemImage: "calendar")
                                     .font(.system(size: 18, weight: .medium, design: .default))
                                     .foregroundColor(.secondary)
                             }
                         }
                         .padding(.horizontal, 20)
                         
-                        VStack(alignment: .leading, spacing: 10) {
-                            HStack {
-                                Text("EVENT STATUS")
-                                    .font(.system(size: 14, weight: .semibold))
-                                    .foregroundColor(.secondary)
-                                Spacer()
-                                Text(status)
-                                    .font(.system(size: 16, weight: .bold))
-                                    .foregroundColor(statusColor)
-                            }
-                            
-                            ZStack(alignment: .leading) {
-                                Capsule()
-                                    .frame(height: 8)
-                                    .foregroundColor(Color(.systemGray5))
-                                
-                                Capsule()
-                                    .frame(width: UIScreen.main.bounds.width * (status == "Today" ? 0.9 : 0.5), height: 8)
-                                    .foregroundColor(statusColor)
-                                    .shadow(color: statusColor.opacity(0.3), radius: 4, x: 0, y: 2)
-                            }
-                        }
-                        .padding(.horizontal, 20)
+                        // New Time and Status Card
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color(.systemBackground))
+                            .stroke(Color(.systemGray4), lineWidth: 1)
+                            .frame(height: 80)
+                            .overlay(
+                                VStack(alignment: .leading, spacing: 8) {
+                                    HStack {
+                                        Text("Time")
+                                            .font(.system(size: 14, weight: .medium))
+                                            .foregroundColor(.secondary)
+                                        Spacer()
+                                        Text(time)
+                                            .font(.system(size: 16, weight: .semibold))
+                                            .foregroundColor(.primary)
+                                    }
+                                    
+                                    HStack {
+                                        Text("Status")
+                                            .font(.system(size: 14, weight: .medium))
+                                            .foregroundColor(.secondary)
+                                        Spacer()
+                                        Text(status)
+                                            .font(.system(size: 14, weight: .semibold))
+                                            .foregroundColor(.white)
+                                            .padding(.horizontal, 12)
+                                            .padding(.vertical, 4)
+                                            .background(
+                                                Capsule()
+                                                    .fill(statusColor)
+                                            )
+                                    }
+                                }
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 12)
+                            )
+                            .padding(.horizontal, 20)
                         
                         Divider()
                             .padding(.vertical, 8)
