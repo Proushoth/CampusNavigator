@@ -73,6 +73,7 @@ struct HomeNavBar: View {
             }
         }
         .padding(.horizontal)
+        .padding(.vertical)
     }
 }
 
