@@ -24,13 +24,31 @@ let sampleLecturers = [
     Lecturer(name: "Dr. David Wong", department: "Biology", email: "david@university.edu", office: "Room 420")
 ]
 
-// View for each lecturer row
+/// Main List View
+struct LecturerListView: View {
+    var body: some View {
+        NavigationStack {
+            VStack(spacing: 0) {  // Remove spacing between navbar and list
+                HomeNavBar()
+                
+                List {
+                    ForEach(sampleLecturers) { lecturer in
+                        LecturerRow(lecturer: lecturer)
+                            .listRowInsets(EdgeInsets()) // Remove default padding
+                            .listRowSeparator(.hidden) // Hide separator if desired
+                    }
+                }
+                .listStyle(.plain) // Use plain list style
+            }
+        }
+    }
+}
+
 struct LecturerRow: View {
     let lecturer: Lecturer
     
     var body: some View {
-        HStack( spacing: 12) {
-            
+        HStack(spacing: 12) {
             Image(systemName: "person.crop.circle.fill")
                 .resizable()
                 .frame(width: 40, height: 40)
@@ -51,21 +69,11 @@ struct LecturerRow: View {
             }
         }
         .padding(.vertical, 8)
-        
+        .padding(.horizontal) // Add horizontal padding instead of using list's default
+        .frame(maxWidth: .infinity, alignment: .leading) // Stretch horizontally
     }
 }
 
-// Main List View
-struct LecturerListView: View {
-    var body: some View {
-        NavigationStack {
-            HomeNavBar()
-            List(sampleLecturers) { lecturer in
-                LecturerRow(lecturer: lecturer)
-            }
-        }
-    }
-}
 
 #Preview {
     LecturerListView()
